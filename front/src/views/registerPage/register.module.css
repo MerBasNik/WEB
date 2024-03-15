@@ -1,7 +1,3 @@
-.hidden__block {
-	display: none;
-}
-
 .firstHalf {
 	position: absolute;
 	display: flex;
@@ -19,28 +15,6 @@
 	justify-content: center;
 	align-items: center;
 	background-color: #fff;
-}
-
-.register__window__error {
-	width: 50%;
-	padding: 3% 0 3% 0;
-	background-color: #e3b3b3;
-	border-radius: 10px;
-	text-align: center;
-}
-
-.wrapper__header__error {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-}
-
-.register__window__error__header {
-	font-family: var(--main-font-family);
-	font-weight: var(--main-font-weight);
-	font-size: var(--error-fontSize);
 }
 
 .register__window {
@@ -75,24 +49,21 @@
 	margin-bottom: 4%;
 }
 
-.window__input__error {
-	background-color: #e3b3b3;
-}
-
 .window__input:active {
 	border: none;
 }
 
-.inputField__header {
-	font-family: var(--main-font-family);
-	font-weight: var(--main-font-weight);
-	font-size: var(--inputField-fonstSize);
+.text__fontFamily {
+	font-family: Inter, sans-serif;
+	font-weight: lighter;
 }
 
-.register__header {
-	font-family: var(--main-font-family);
-	font-weight: var(--main-font-weight);
-	font-size: var(--register-fontSize);
+.register__header__fontSize {
+	font-size: 1.875rem;
+}
+
+.input__header__fontSize {
+	font-size: 1.063rem;
 }
 
 .label__header__fontSize {
@@ -100,17 +71,12 @@
 }
 
 .wrapper__input__submit {
-	display: flex;
 	width: 100%;
 	margin-top: 10%;
 }
 
 .wrapper__input__submit:focus {
 	border: 10px #000;
-}
-
-.wrapper__buttonTextLink {
-	width: 50%;
 }
 
 .input__submit {
@@ -120,12 +86,6 @@
 	border: none;
 	padding: 3%;
 	cursor: pointer;
-	font-family: var(--main-font-family);
-	font-weight: var(--main-font-weight);
-	font-size: var(--inputField-fonstSize);
-	text-decoration: none;
-	color: #000;
-	text-align: center;
 }
 
 .input__submit:active {

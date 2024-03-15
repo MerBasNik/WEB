@@ -1,50 +1,44 @@
 .wrapper__user__assistance {
-	display: flex;
-	justify-content: space-between;
-	box-sizing: border-box;
-	width: 100%;
+    display: flex;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .wrapper__remember__entry__input {
-	display: flex;
+    display: flex;
 }
 
 .remember__entry__input {
-	border-radius: 4px;
-	background-color: #d9d9d9;
-	cursor: pointer;
+    border-radius: 4px;
+    background-color: #D9D9D9;
+    cursor: pointer;
 }
 
 .label__remember__entry__input {
-	margin-left: 2%;
-	white-space: nowrap;
-	font-family: var(--main-font-family);
-	font-weight: var(--main-font-weight);
-	font-size: var(--label-header-fontSize);
+    margin-left: 2%;
+    white-space: nowrap;
 }
 
 .wrapper__forgot__password {
-	display: flex;
-	justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .forgot__password {
-	outline: none;
-	text-decoration: none;
-	color: black;
-	font-family: var(--main-font-family);
-	font-weight: var(--main-font-weight);
-	font-size: var(--label-header-fontSize);
+    outline: none;
+    text-decoration: none;
+    color: black;
 }
 
 .forgot__password:visited {
-	color: black;
+    color: black;
 }
 
 .forgot__password:hover {
-	color: #850000;
+    color: #850000;
 }
 
 .forgot__password:active {
-	color: #e70000;
+    color: #e70000;
 }
