@@ -6,18 +6,19 @@ import (
 )
 
 type ChatItemService struct {
-	repo     repository.ChatItem
+	repo repository.ChatItem
 	listRepo repository.ChatList
 }
 
 func NewChatItemService(repo repository.ChatItem, listRepo repository.ChatList) *ChatItemService {
 	return &ChatItemService{repo: repo, listRepo: listRepo}
 }
+
 func (s *ChatItemService) Create(userId, listId int, item chat.ChatItem) (int, error) {
 	_, err := s.listRepo.GetById(userId, listId)
 	if err != nil {
-		// list does not exists or does not belongsto user
-		return 0, nil
+		// list does not exists or does not belongs to user
+		return 0, err
 	}
 
 	return s.repo.Create(listId, item)

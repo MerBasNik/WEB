@@ -33,5 +33,6 @@ func (s *ChatListService) Update(userId, listId int, input chat.UpdateListInput)
 	if err := input.Validate(); err != nil {
 		return err
 	}
+
 	return s.repo.Update(userId, listId, input)
 }

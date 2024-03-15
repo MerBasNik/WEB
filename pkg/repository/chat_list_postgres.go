@@ -20,7 +20,7 @@ func NewChatListPostgres(db *sqlx.DB) *ChatListPostgres {
 func (r *ChatListPostgres) Create(userId int, list chat.ChatList) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 
 	var id int
@@ -54,8 +54,8 @@ func (r *ChatListPostgres) GetAll(userId int) ([]chat.ChatList, error) {
 func (r *ChatListPostgres) GetById(userId, listId int) (chat.ChatList, error) {
 	var list chat.ChatList
 
-	query := fmt.Sprintf(`SELECT tl.id, tl.title, tl.description FROM %s tl 
-						INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 AND ul.list_id = $2`,
+	query := fmt.Sprintf(`SELECT tl.id, tl.title, tl.description FROM %s tl
+								INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 AND ul.list_id = $2`,
 		chatListsTable, usersListsTable)
 	err := r.db.Get(&list, query, userId, listId)
 
@@ -91,6 +91,7 @@ func (r *ChatListPostgres) Update(userId, listId int, input chat.UpdateListInput
 	// description=$1
 	// title=$1, description=$2
 	setQuery := strings.Join(setValues, ", ")
+
 	query := fmt.Sprintf("UPDATE %s tl SET %s FROM %s ul WHERE tl.id = ul.list_id AND ul.list_id=$%d AND ul.user_id=$%d",
 		chatListsTable, setQuery, usersListsTable, argId, argId+1)
 	args = append(args, listId, userId)

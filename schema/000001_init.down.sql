@@ -1,5 +1,9 @@
-DROP TABLE IF EXISTS lists_items;
-DROP TABLE IF EXISTS users_lists;
-DROP TABLE IF EXISTS chat_lists;
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS chat_items;
+DROP TABLE lists_items;
+
+DROP TABLE users_lists;
+
+DROP TABLE chat_lists;
+
+DROP TABLE users;
+
+DROP TABLE chat_items;

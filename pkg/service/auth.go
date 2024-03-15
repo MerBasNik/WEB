@@ -19,25 +19,24 @@ const (
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UsedId int `json:"user_id"`
+	UserId int `json:"user_id"`
 }
 
 type AuthService struct {
-	repo repository.Autorization
+	repo repository.Authorization
 }
 
-func NewAuthService(repo repository.Autorization) *AuthService {
+func NewAuthService(repo repository.Authorization) *AuthService {
 	return &AuthService{repo: repo}
 }
 
 func (s *AuthService) CreateUser(user chat.User) (int, error) {
-	user.Password = genetatePassordHash(user.Password)
-
+	user.Password = generatePasswordHash(user.Password)
 	return s.repo.CreateUser(user)
 }
 
-func (s *AuthService) GenerateToken(username, passowrd string) (string, error) {
-	user, err := s.repo.GetUser(username, genetatePassordHash(passowrd))
+func (s *AuthService) GenerateToken(username, password string) (string, error) {
+	user, err := s.repo.GetUser(username, generatePasswordHash(password))
 	if err != nil {
 		return "", err
 	}
@@ -53,17 +52,16 @@ func (s *AuthService) GenerateToken(username, passowrd string) (string, error) {
 	return token.SignedString([]byte(signingKey))
 }
 
-func (s *AuthService) ParseToken(accesstoken string) (int, error) {
-	token, err := jwt.ParseWithClaims(accesstoken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+func (s *AuthService) ParseToken(accessToken string) (int, error) {
+	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
 
 		return []byte(signingKey), nil
 	})
-
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 
 	claims, ok := token.Claims.(*tokenClaims)
@@ -71,10 +69,10 @@ func (s *AuthService) ParseToken(accesstoken string) (int, error) {
 		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
 
-	return claims.UsedId, nil
+	return claims.UserId, nil
 }
 
-func genetatePassordHash(password string) string {
+func generatePasswordHash(password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
 

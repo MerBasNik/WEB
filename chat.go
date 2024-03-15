@@ -8,7 +8,7 @@ type ChatList struct {
 	Description string `json:"description" db:"description"`
 }
 
-type UserList struct {
+type UsersList struct {
 	Id     int
 	UserId int
 	ListId int
@@ -21,7 +21,7 @@ type ChatItem struct {
 	Done        bool   `json:"done" db:"done"`
 }
 
-type ListItem struct {
+type ListsItem struct {
 	Id     int
 	ListId int
 	ItemId int
@@ -34,7 +34,7 @@ type UpdateListInput struct {
 
 func (i UpdateListInput) Validate() error {
 	if i.Title == nil && i.Description == nil {
-		return errors.New("updates structure has no values")
+		return errors.New("update structure has no values")
 	}
 
 	return nil
@@ -47,8 +47,8 @@ type UpdateItemInput struct {
 }
 
 func (i UpdateItemInput) Validate() error {
-	if i.Title == nil && i.Description == nil && i.Done == nil{
-		return errors.New("updates structure has no values")
+	if i.Title == nil && i.Description == nil && i.Done == nil {
+		return errors.New("update structure has no values")
 	}
 
 	return nil

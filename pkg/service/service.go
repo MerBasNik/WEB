@@ -5,9 +5,9 @@ import (
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 )
 
-type Autorization interface {
+type Authorization interface {
 	CreateUser(user chat.User) (int, error)
-	GenerateToken(username, passowrd string) (string, error)
+	GenerateToken(username, password string) (string, error)
 	ParseToken(token string) (int, error)
 }
 
@@ -28,15 +28,15 @@ type ChatItem interface {
 }
 
 type Service struct {
-	Autorization
-	ChatItem
+	Authorization
 	ChatList
+	ChatItem
 }
 
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
-		Autorization: NewAuthService(repos.Autorization),
-		ChatList:     NewChatListService(repos.ChatList),
-		ChatItem:     NewChatItemService(repos.ChatItem, repos.ChatList),
+		Authorization: NewAuthService(repos.Authorization),
+		ChatList:      NewChatListService(repos.ChatList),
+		ChatItem:      NewChatItemService(repos.ChatItem, repos.ChatList),
 	}
 }

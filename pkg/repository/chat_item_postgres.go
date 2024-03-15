@@ -19,23 +19,24 @@ func NewChatItemPostgres(db *sqlx.DB) *ChatItemPostgres {
 func (r *ChatItemPostgres) Create(listId int, item chat.ChatItem) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 
 	var itemId int
 	createItemQuery := fmt.Sprintf("INSERT INTO %s (title, description) values ($1, $2) RETURNING id", chatItemsTable)
+
 	row := tx.QueryRow(createItemQuery, item.Title, item.Description)
 	err = row.Scan(&itemId)
 	if err != nil {
 		tx.Rollback()
-		return 0, nil
+		return 0, err
 	}
 
-	createListItemQuery := fmt.Sprintf("INSERT INTO %s (list_id, item_id) values ($1, $2)", listsItemsTable)
-	_, err = tx.Exec(createListItemQuery, listId, itemId)
+	createListItemsQuery := fmt.Sprintf("INSERT INTO %s (list_id, item_id) values ($1, $2)", listsItemsTable)
+	_, err = tx.Exec(createListItemsQuery, listId, itemId)
 	if err != nil {
 		tx.Rollback()
-		return 0, nil
+		return 0, err
 	}
 
 	return itemId, tx.Commit()
@@ -43,9 +44,9 @@ func (r *ChatItemPostgres) Create(listId int, item chat.ChatItem) (int, error) {
 
 func (r *ChatItemPostgres) GetAll(userId, listId int) ([]chat.ChatItem, error) {
 	var items []chat.ChatItem
-	query := fmt.Sprintf(`SELECT ti.id, ti.title, ti.description, ti.done FROM %s ti INNER JOIN %s li on li.item_id = ti.id 
-							INNER JOIN %s ul on ul.list_id = li.list_id WHERE 
-							li.list_id = $1 AND ul.user_id = $2`, chatItemsTable, listsItemsTable, usersListsTable)
+	query := fmt.Sprintf(`SELECT ti.id, ti.title, ti.description, ti.done FROM %s ti INNER JOIN %s li on li.item_id = ti.id
+									INNER JOIN %s ul on ul.list_id = li.list_id WHERE li.list_id = $1 AND ul.user_id = $2`,
+		chatItemsTable, listsItemsTable, usersListsTable)
 	if err := r.db.Select(&items, query, listId, userId); err != nil {
 		return nil, err
 	}
@@ -55,9 +56,9 @@ func (r *ChatItemPostgres) GetAll(userId, listId int) ([]chat.ChatItem, error) {
 
 func (r *ChatItemPostgres) GetById(userId, itemId int) (chat.ChatItem, error) {
 	var item chat.ChatItem
-	query := fmt.Sprintf(`SELECT ti.id, ti.title, ti.description, ti.done FROM %s ti INNER JOIN %s li on li.item_id = ti.id 
-							INNER JOIN %s ul on ul.list_id = li.list_id WHERE 
-							ti.id = $1 AND ul.user_id = $2`, chatItemsTable, listsItemsTable, usersListsTable)
+	query := fmt.Sprintf(`SELECT ti.id, ti.title, ti.description, ti.done FROM %s ti INNER JOIN %s li on li.item_id = ti.id
+									INNER JOIN %s ul on ul.list_id = li.list_id WHERE ti.id = $1 AND ul.user_id = $2`,
+		chatItemsTable, listsItemsTable, usersListsTable)
 	if err := r.db.Get(&item, query, itemId, userId); err != nil {
 		return item, err
 	}
@@ -66,10 +67,9 @@ func (r *ChatItemPostgres) GetById(userId, itemId int) (chat.ChatItem, error) {
 }
 
 func (r *ChatItemPostgres) Delete(userId, itemId int) error {
-	query := fmt.Sprintf(`DELETE FROM %s ti USING %s li, %s ul, 
-						WHERE ti.id = li.item_id AND li.list_id = ul.list_id
-						AND ul.user_id = $1 AND ti.id = $2`, chatItemsTable, listsItemsTable, usersListsTable)
-
+	query := fmt.Sprintf(`DELETE FROM %s ti USING %s li, %s ul 
+									WHERE ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $1 AND ti.id = $2`,
+									chatItemsTable, listsItemsTable, usersListsTable)
 	_, err := r.db.Exec(query, userId, itemId)
 	return err
 }
@@ -99,9 +99,8 @@ func (r *ChatItemPostgres) Update(userId, itemId int, input chat.UpdateItemInput
 
 	setQuery := strings.Join(setValues, ", ")
 
-	query := fmt.Sprintf(`UPDATE %s ti SET %s FROM %s li, %s ul 
-							WHERE ti.id = li.item_id AND li.list_id = ul.list_id
-							AND ul.user_id = $%d AND ti.id = $%d`,
+	query := fmt.Sprintf(`UPDATE %s ti SET %s FROM %s li, %s ul
+									WHERE ti.id = li.item_id AND li.list_id = ul.list_id AND ul.user_id = $%d AND ti.id = $%d`,
 		chatItemsTable, setQuery, listsItemsTable, usersListsTable, argId, argId+1)
 	args = append(args, userId, itemId)
 

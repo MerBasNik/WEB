@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"os"
+	"os/signal"
+	"syscall"
 
 	chat "github.com/MerBasNik/rndmCoffee"
 	handler "github.com/MerBasNik/rndmCoffee/pkg/handler"
@@ -13,41 +16,69 @@ import (
 	"github.com/spf13/viper"
 )
 
+// @title Chat App API
+// @version 1.0
+// @description API Server for ChatList Application
+
+// @host localhost:8000
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 
-	if err := intiConfig(); err != nil {
+	if err := initConfig(); err != nil {
 		logrus.Fatalf("error initializing configs: %s", err.Error())
 	}
 
 	if err := godotenv.Load(); err != nil {
-		logrus.Fatalf("error loading env value: %s", err.Error())
+		logrus.Fatalf("error loading env variables: %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     viper.GetString("db.host"),
 		Port:     viper.GetString("db.port"),
+		Username: viper.GetString("db.username"),
+		DBName:   viper.GetString("db.dbname"),
+		SSLMode:  viper.GetString("db.sslmode"),
 		Password: os.Getenv("DB_PASSWORD"),
-		Username: viper.GetString("db.Username"),
-		DBName:   viper.GetString("db.DBName"),
-		SSLMode:  viper.GetString("db.SSLMode"),
 	})
-
 	if err != nil {
-		logrus.Fatalf("failed to initialized db: %s", err.Error())
+		logrus.Fatalf("failed to initialize db: %s", err.Error())
 	}
 
 	repos := repository.NewRepository(db)
 	services := service.NewService(repos)
-	handler := handler.NewHandler(services)
+	handlers := handler.NewHandler(services)
 
 	srv := new(chat.Server)
-	if err := srv.Run(viper.GetString("port"), handler.InitRouts()); err != nil {
-		logrus.Fatalf("error while running http server: %s", err.Error())
+	go func() {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+			logrus.Fatalf("error occured while running http server: %s", err.Error())
+		}
+	}()
+
+	logrus.Print("ChatApp Started")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
+	<-quit
+
+	logrus.Print("ChatApp Shutting Down")
+
+	if err := srv.Shutdown(context.Background()); err != nil {
+		logrus.Errorf("error occured on server shutting down: %s", err.Error())
+	}
+
+	if err := db.Close(); err != nil {
+		logrus.Errorf("error occured on db connection close: %s", err.Error())
 	}
 }
 
-func intiConfig() error {
+func initConfig() error {
 	viper.AddConfigPath("configs")
 	viper.SetConfigName("config")
 	return viper.ReadInConfig()

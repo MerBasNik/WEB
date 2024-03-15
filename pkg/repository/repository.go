@@ -5,7 +5,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Autorization interface {
+type Authorization interface {
 	CreateUser(user chat.User) (int, error)
 	GetUser(username, password string) (chat.User, error)
 }
@@ -27,15 +27,15 @@ type ChatItem interface {
 }
 
 type Repository struct {
-	Autorization
-	ChatItem
+	Authorization
 	ChatList
+	ChatItem
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Autorization: NewAuthPostgres(db),
-		ChatList:     NewChatListPostgres(db),
-		ChatItem: 	  NewChatItemPostgres(db),
+		Authorization: NewAuthPostgres(db),
+		ChatList:      NewChatListPostgres(db),
+		ChatItem:      NewChatItemPostgres(db),
 	}
 }
