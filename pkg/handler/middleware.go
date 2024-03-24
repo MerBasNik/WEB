@@ -27,7 +27,6 @@ func (h *Handler) userIdentity(c *gin.Context) {
 		return		
 	}
 
-	//fmt.Println("0000000000000000000000")
 	if len(headerParts[1]) == 0 {
 		NewErrorResponse(c, http.StatusUnauthorized, "token is empty")
 		return

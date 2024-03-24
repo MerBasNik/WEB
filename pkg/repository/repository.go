@@ -7,7 +7,16 @@ import (
 
 type Authorization interface {
 	CreateUser(user chat.User) (int, error)
-	GetUser(username, password string) (chat.User, error)
+	GetUser(email, password string) (chat.User, error)
+}
+
+type Profile interface {
+	CreateProfile(userId int, profile chat.Profile) (int, error)
+	GetProfile(userId, profileId int) (chat.Profile, error)
+	EditProfile(userId, profileId int, input chat.UpdateProfile) error
+	CreateHobby(userId int, hobby chat.UserHobby) (int, error)
+	GetAllHobby(userId int) ([]chat.UserHobby, error)
+	DeleteHobby(userId, hobbyId int) error
 }
 
 type ChatList interface {
@@ -28,6 +37,7 @@ type ChatItem interface {
 
 type Repository struct {
 	Authorization
+	Profile
 	ChatList
 	ChatItem
 }
@@ -35,6 +45,7 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		Profile: 	   NewProfilePostgres(db),
 		ChatList:      NewChatListPostgres(db),
 		ChatItem:      NewChatItemPostgres(db),
 	}

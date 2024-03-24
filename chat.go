@@ -3,9 +3,9 @@ package chat
 import "errors"
 
 type ChatList struct {
-	Id          int    `json:"id" db:"id"`
+	UserId      int    `json:"id" db:"id"`
 	Title       string `json:"title" db:"title" binding:"required"`
-	Description string `json:"description" db:"description"`
+	//Photo 		string `json:"photo" db:"description"`
 }
 
 type UsersList struct {
@@ -18,13 +18,13 @@ type ChatItem struct {
 	Id          int    `json:"id" db:"id"`
 	Title       string `json:"title" db:"title" binding:"required"`
 	Description string `json:"description" db:"description"`
-	Done        bool   `json:"done" db:"done"`
+	//Done        bool   `json:"done" db:"done"`
 }
 
-type ListsItem struct {
+type ItemLists struct {
 	Id     int
-	ListId int
-	ItemId int
+	ChatListId int
+	ChatItemId int
 }
 
 type UpdateListInput struct {

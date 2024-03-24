@@ -35,8 +35,8 @@ func (s *AuthService) CreateUser(user chat.User) (int, error) {
 	return s.repo.CreateUser(user)
 }
 
-func (s *AuthService) GenerateToken(username, password string) (string, error) {
-	user, err := s.repo.GetUser(username, generatePasswordHash(password))
+func (s *AuthService) GenerateToken(email, password string) (string, error) {
+	user, err := s.repo.GetUser(email, generatePasswordHash(password))
 	if err != nil {
 		return "", err
 	}
