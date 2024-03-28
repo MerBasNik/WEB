@@ -9,7 +9,7 @@ type User struct {
 type Profile struct {
 	Name     	 string 	`json:"name" binding:"required"`
 	Surname  	 string 	`json:"surname" binding:"required"`
-	//Photo 	 	 string 	`json:"photo" binding:"required"`
+	Photo 	 	 string 	`json:"photo" binding:"required"`
 	Telegram 	 string 	`json:"telegram" binding:"required"`
 	City 	 	 string 	`json:"city" binding:"required"`
 	FindStatus 	 bool 		`json:"findstatus"`
@@ -18,7 +18,7 @@ type Profile struct {
 type UpdateProfile struct {
 	Name     	 *string 	`json:"name"`
 	Surname  	 *string 	`json:"surname"`
-	//Photo 	 	 string 	`json:"photo" binding:"required"`
+	Photo 	 	 string 	`json:"photo"`
 	Telegram 	 *string 	`json:"telegram"`
 	City 	 	 *string 	`json:"city"`
 }

@@ -36,8 +36,18 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		profile := api.Group("/profile")
 		{
-			profile.POST("/edit", h.createProfile)
+			profile.POST("/createprofile", h.createProfile)
+
+			hobby := profile.Group("/hobbys")
+			{
+				hobby.POST("/createHobby", h.createHobby)
+				hobby.GET("/getHobby", h.getAllHobby)
+				hobby.DELETE("/deleteHobby", h.deleteHobby)
+			}
+
 			profile.PUT("/edit", h.editProfile)
+			profile.GET("/get", h.getProfile)
+			
 		}
 
 		chats := api.Group("/chats")
@@ -55,7 +65,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			}
 		}
 
-		items := api.Group("items")
+		items := api.Group("/items")
 		{
 			items.GET("/:id", h.getItemById)
 			items.PUT("/:id", h.updateItem)

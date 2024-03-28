@@ -24,7 +24,7 @@ func (h *Handler) userIdentity(c *gin.Context) {
 	headerParts := strings.Split(header, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
 		NewErrorResponse(c, http.StatusUnauthorized, "invalid auth header")
-		return		
+		return
 	}
 
 	if len(headerParts[1]) == 0 {
@@ -32,7 +32,6 @@ func (h *Handler) userIdentity(c *gin.Context) {
 		return
 	}
 
-	
 	userId, err := h.services.Authorization.ParseToken(headerParts[1])
 	if err != nil {
 		NewErrorResponse(c, http.StatusUnauthorized, err.Error())
