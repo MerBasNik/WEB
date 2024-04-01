@@ -35,3 +35,12 @@ func (r *AuthPostgres) GetUser(email, password string) (chat.User, error) {
 
 	return user, err
 }
+
+func (r *AuthPostgres) ResetPassword(email, password string) error {
+	query := fmt.Sprintf("UPDATE %s tl SET password_hash=$%s WHERE tl.email=$%s",
+	usersTable, password, email)
+	
+	_, err := r.db.Exec(query)
+
+	return err
+}

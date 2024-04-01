@@ -4,6 +4,8 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
+	"net/smtp"
+	"os"
 	"time"
 
 	chat "github.com/MerBasNik/rndmCoffee"
@@ -77,4 +79,44 @@ func generatePasswordHash(password string) string {
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func (s *AuthService) ForgotPassword(input string) error {
+	err := SendEmail(input)
+	return err
+}
+
+func (s *AuthService) ResetPassword(email, password string) error {
+	passwordHash := generatePasswordHash(password)
+	return s.repo.ResetPassword(email, passwordHash)
+}
+
+func SendEmail(email string) error {
+	// sender data
+	from := os.Getenv("FromEmailAddr") //ex: "John.Doe@gmail.com"
+	password := os.Getenv("SMTPpwd")   // ex: "ieiemcjdkejspqz"
+	// receiver address privided through toEmail argument
+	to := []string{email}
+	// smtp - Simple Mail Transfer Protocol
+	host := "smtp.gmail.com"
+	port := "587"
+	address := host + ":" + port
+	// message
+	subject := "Subject: Email Verification\n"
+	// localhost:8080 will be removed by many email service but works with online sites
+	// https must be used since we are sending personal data through url parameters
+
+	//  ???????
+	body := "<body><a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"http://localhost:3000/main\">Reset Password</a></body>"
+
+	fmt.Println("body:", body)
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
+	message := []byte(subject + mime + body)
+	// athentication data
+	// func PlainAuth(identity, username, password, host string) Auth
+	auth := smtp.PlainAuth("", from, password, host)
+	// func SendMail(addr string, a Auth, from string, to []string, msg []byte) error
+	fmt.Println("message:", string(message))
+	err := smtp.SendMail(address, auth, from, to, message)
+	return err
 }

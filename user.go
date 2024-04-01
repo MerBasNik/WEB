@@ -33,3 +33,12 @@ type UserHobby struct {
 	Id int 
 	Description string `json:"description" binding:"required"`	
 }
+
+type ForgotPasswordInput struct {
+	Email 	string `json:"email" binding:"required"`
+}
+
+type ResetPasswordInput struct {
+	Password 		string `json:"password" binding:"required"`
+	PasswordRepeat  string `json:"password-repeat" binding:"required"`
+}

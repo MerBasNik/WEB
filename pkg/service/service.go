@@ -10,6 +10,8 @@ type Authorization interface {
 	CreateUser(user chat.User) (int, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
+	ForgotPassword(input string) error
+	ResetPassword(email, password string) error 
 }
 
 type Profile interface {
