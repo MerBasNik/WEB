@@ -80,6 +80,11 @@ func (h *Handler) editProfile(c *gin.Context) {
 	}
 
 	var input chat.UpdateProfile
+	if err := c.BindJSON(&input); err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
 	if err := h.services.Profile.EditProfile(userId, prof_id, input); err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -196,12 +201,12 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param   prof_id path int true "Prof Id"
-// @Param input body chat.UserHobby true "list info"
+// @Param   input body chat.UserHobby true "list info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/profile/{prof_id}/hobby/createHobby [post]
+// @Router /api/profile/{prof_id}/hobby/create_hobby [post]
 func (h *Handler) createHobby(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -242,7 +247,7 @@ type getAllHobbyResponse struct {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/profile/{prof_id}/hobby/getHobby [get]
+// @Router /api/profile/{prof_id}/hobby/get_hobby [get]
 func (h *Handler) getAllHobby(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -274,7 +279,7 @@ func (h *Handler) getAllHobby(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/profile/{prof_id}/hobby/deleteHobby/{hobby_id} [delete]
+// @Router /api/profile/{prof_id}/hobby/delete_hobby/{hobby_id} [delete]
 func (h *Handler) deleteHobby(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

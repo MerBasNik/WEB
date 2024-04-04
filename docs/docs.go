@@ -327,58 +327,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/items": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "get all chats items",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "chats items"
-                ],
-                "summary": "Get All Chats Items",
-                "operationId": "get-all-chats-items",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.getAllListsItemsResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            },
+        "/api/chats/{chat_id}/items/create_item": {
             "post": {
                 "security": [
                     {
@@ -398,6 +347,13 @@ const docTemplate = `{
                 "summary": "Create Chat Item",
                 "operationId": "create-chat-item",
                 "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Chat Id",
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "list info",
                         "name": "input",
@@ -442,7 +398,131 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/items/{item_id}": {
+        "/api/chats/{chat_id}/items/get_all_items": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get all chats items",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats items"
+                ],
+                "summary": "Get All Chats Items",
+                "operationId": "get-all-chats-items",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Chat Id",
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.getAllListsItemsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/items/delete_item/{item_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete chat item",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats items"
+                ],
+                "summary": "Delete Chat Item",
+                "operationId": "delete-chat-item",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Item Id",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.statusResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/items/get_item/{item_id}": {
             "get": {
                 "security": [
                     {
@@ -502,7 +582,9 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/items/update_item/{item_id}": {
             "put": {
                 "security": [
                     {
@@ -537,66 +619,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/chat.UpdateItemInput"
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "delete chat item",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "chats items"
-                ],
-                "summary": "Delete Chat Item",
-                "operationId": "delete-chat-item",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Item Id",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -880,7 +902,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/profile/{prof_id}/hobby/createHobby": {
+        "/api/profile/{prof_id}/hobby/create_hobby": {
             "post": {
                 "security": [
                     {
@@ -951,7 +973,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/profile/{prof_id}/hobby/deleteHobby/{hobby_id}": {
+        "/api/profile/{prof_id}/hobby/delete_hobby/{hobby_id}": {
             "delete": {
                 "security": [
                     {
@@ -1020,7 +1042,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/profile/{prof_id}/hobby/getHobby": {
+        "/api/profile/{prof_id}/hobby/get_hobby": {
             "get": {
                 "security": [
                     {

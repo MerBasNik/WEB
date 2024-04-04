@@ -25,19 +25,31 @@ CREATE TABLE chat_lists
     -- description varchar(255)
 );
 
-CREATE TABLE user_hobby
+CREATE TABLE users_hobby
 (
     id          serial       PRIMARY KEY,
     description varchar(255) not null
 );
 
-CREATE TABLE users_lists
+CREATE TABLE users_profile_lists
 (
     id           serial                                              PRIMARY KEY,
     user_id      int references users (id)         on delete cascade not null,
-    profile_id   int references users_profile (id) on delete cascade not null,
-    chatlists_id int references chat_lists (id)    on delete cascade not null,
-    userhobby_id int references user_hobby (id)    on delete cascade not null
+    profile_id   int references users_profile (id) on delete cascade not null
+);
+
+CREATE TABLE users_hobby_lists
+(
+    id           serial                                              PRIMARY KEY,
+    user_id      int references users (id)         on delete cascade not null,
+    userhobby_id int references users_hobby (id)    on delete cascade not null
+);
+
+CREATE TABLE users_chat_lists
+(
+    id           serial                                              PRIMARY KEY,
+    user_id      int references users (id)         on delete cascade not null,
+    chatlists_id int references chat_lists (id)    on delete cascade not null
 );
 
 CREATE TABLE chat_items

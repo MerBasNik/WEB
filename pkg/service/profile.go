@@ -32,7 +32,7 @@ func (s *ProfileService) EditProfile(userId, profileId int, input chat.UpdatePro
 	if err := input.Validate(); err != nil {
 		return err
 	}
-	
+
 	return s.repo.EditProfile(userId, profileId, input)
 }
 

@@ -16,12 +16,13 @@ import (
 // @ID create-chat-item
 // @Accept  json
 // @Produce  json
+// @Param   chat_id path int true "Chat Id"
 // @Param input body chat.ChatItem true "list info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items [post]
+// @Router /api/chats/{chat_id}/items/create_item [post]
 func (h *Handler) createItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -29,7 +30,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 
-	listId, err := strconv.Atoi(c.Param("id"))
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
 		return
@@ -41,7 +42,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.ChatItem.Create(userId, listId, input)
+	id, err := h.services.ChatItem.Create(userId, chat_id, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -63,11 +64,12 @@ type getAllListsItemsResponse struct {
 // @ID get-all-chats-items
 // @Accept  json
 // @Produce  json
+// @Param   chat_id path int true "Chat Id"
 // @Success 200 {object} getAllListsItemsResponse
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items [get]
+// @Router /api/chats/{chat_id}/items/get_all_items [get]
 func (h *Handler) getAllItems(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -75,13 +77,13 @@ func (h *Handler) getAllItems(c *gin.Context) {
 		return
 	}
 
-	listId, err := strconv.Atoi(c.Param("id"))
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
 		return
 	}
 
-	items, err := h.services.ChatItem.GetAll(userId, listId)
+	items, err := h.services.ChatItem.GetAll(userId, chat_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -105,7 +107,7 @@ func (h *Handler) getAllItems(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items/{item_id} [get]
+// @Router /api/items/get_item/{item_id} [get]
 func (h *Handler) getItemById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -113,13 +115,13 @@ func (h *Handler) getItemById(c *gin.Context) {
 		return
 	}
 
-	itemId, err := strconv.Atoi(c.Param("id"))
+	item_id, err := strconv.Atoi(c.Param("item_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
 		return
 	}
 
-	item, err := h.services.ChatItem.GetById(userId, itemId)
+	item, err := h.services.ChatItem.GetById(userId, item_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -142,7 +144,7 @@ func (h *Handler) getItemById(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items/{item_id} [put]
+// @Router /api/items/update_item/{item_id} [put]
 func (h *Handler) updateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -150,7 +152,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(c.Param("id"))
+	item_id, err := strconv.Atoi(c.Param("item_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return
@@ -162,7 +164,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 		return
 	}
 
-	if err := h.services.ChatItem.Update(userId, id, input); err != nil {
+	if err := h.services.ChatItem.Update(userId, item_id, input); err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -183,7 +185,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items/{item_id} [delete]
+// @Router /api/items/delete_item/{item_id} [delete]
 func (h *Handler) deleteItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -191,13 +193,13 @@ func (h *Handler) deleteItem(c *gin.Context) {
 		return
 	}
 
-	itemId, err := strconv.Atoi(c.Param("id"))
+	item_id, err := strconv.Atoi(c.Param("item_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
 		return
 	}
 
-	err = h.services.ChatItem.Delete(userId, itemId)
+	err = h.services.ChatItem.Delete(userId, item_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
