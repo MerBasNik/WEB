@@ -70,10 +70,6 @@ func (s *ProfileService) DeleteHobby(userId, hobbyId int) error {
 // }
 
 
-// func (s *ProfileService) UploadAvatar(profileId int, directory string) error {
-// 	return s.repo.UploadAvatar(profileId, directory)
-// }
-
 
 // func (s *ProfileService) RemoveAvatar(userId int, c *gin.Context) (string, error) {
 // 	userId, err := getUserId(c)
@@ -111,27 +107,6 @@ func (s *ProfileService) DeleteHobby(userId, hobbyId int) error {
 
 
 
-
-
-
-
-
-// func getAvatarAllowedExtensions() map[string]bool {
-// 	return map[string]bool{
-// 		".jpg":  true,
-// 		".jpeg": true,
-// 		".png":  true,
-// 		".gif":  true,
-// 	}
-// }
-
-// func IsAvatarHasAllowedExtension(extension string) bool {
-// 	if _, ok := getAvatarAllowedExtensions()[extension]; !ok {
-// 		return false
-// 	}
-
-// 	return true
-// }
 
 // func getEnv(key, fallback string) string {
 // 	if value, exists := os.LookupEnv(key); exists {

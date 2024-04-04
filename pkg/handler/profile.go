@@ -157,6 +157,18 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 
 	defer file.Close()
 
+	var format = filepath.Ext(fileHeader.Filename)
+	if IsAvatarHasAllowedExtension(format) {
+		NewErrorResponse(c, http.StatusBadRequest, "it is not JPG, JPEG, PNG, GIF")
+		return
+	}
+
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	// if fileHeader.Size <= maxAvatarSize && fileHeader.Size > 0 {
 	// 	NewErrorResponse(c, http.StatusBadRequest, "avatar file size is too large")
 	// 	return
@@ -171,7 +183,7 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 	}
 
 	// Create a new file in the uploads directory
-	avatarFilename := fmt.Sprintf("../avatars/%d_%s", time.Now().Unix(), filepath.Ext(fileHeader.Filename))
+	avatarFilename := fmt.Sprintf("../avatars/%d_%d_%s", time.Now().Unix(), userId, format)
 	dst, err := os.Create(avatarFilename)
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "error create new file")
@@ -302,4 +314,21 @@ func (h *Handler) deleteHobby(c *gin.Context) {
 	c.JSON(http.StatusOK, statusResponse{
 		Status: "ok",
 	})
+}
+
+func getAvatarAllowedExtensions() map[string]bool {
+	return map[string]bool{
+		"jpg":  true,
+		"jpeg": true,
+		"png":  true,
+		"gif":  true,
+	}
+}
+
+func IsAvatarHasAllowedExtension(extension string) bool {
+	if _, ok := getAvatarAllowedExtensions()[extension]; !ok {
+		return false
+	}
+
+	return true
 }
