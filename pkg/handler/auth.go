@@ -82,7 +82,7 @@ func (h *Handler) signIn(c *gin.Context) {
 // 		return
 // 	}
 
-// 	err := h.services.Authorization.ResetPassword(input.Password)
+// 	err := h.services.Authorization.ResetPassword(inputEmail.Email, input.Password)
 // 	if err != nil {
 // 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 // 		return
@@ -93,7 +93,18 @@ func (h *Handler) signIn(c *gin.Context) {
 // 	})
 // }
 
-
+// @Summary Forgot Password
+// @Tags auth
+// @Description forgot password
+// @ID forgot-password
+// @Accept  json
+// @Produce  json
+// @Param input body chat.ForgotPasswordInput true "credentials"
+// @Success 200 {string} statusResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /auth/forgot-password [post]
 func (h *Handler) forgotPassword(c *gin.Context) {
 	var inputEmail chat.ForgotPasswordInput
 
@@ -103,13 +114,6 @@ func (h *Handler) forgotPassword(c *gin.Context) {
 	}
 
 	err := h.services.Authorization.ForgotPassword(inputEmail.Email)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	var input chat.ResetPasswordInput
-	err = h.services.Authorization.ResetPassword(inputEmail.Email, input.Password)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

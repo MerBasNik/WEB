@@ -15,9 +15,11 @@ type Profile interface {
 	CreateProfile(userId int, profile chat.Profile) (int, error)
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
+	
 	CreateHobby(userId int, hobby chat.UserHobby) (int, error)
 	GetAllHobby(userId int) ([]chat.UserHobby, error)
 	DeleteHobby(userId, hobbyId int) error
+	//UploadAvatar(profileId int, directory string) error
 }
 
 type ChatList interface {

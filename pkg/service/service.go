@@ -3,7 +3,6 @@ package service
 import (
 	chat "github.com/MerBasNik/rndmCoffee"
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
-	"github.com/gin-gonic/gin"
 )
 
 type Authorization interface {
@@ -18,10 +17,11 @@ type Profile interface {
 	CreateProfile(userId int, profile chat.Profile) (int, error)
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
+
 	CreateHobby(userId int, hobby chat.UserHobby) (int, error)
 	GetAllHobby(userId int) ([]chat.UserHobby, error)
 	DeleteHobby(userId, hobbyId int) error
-	UploadAvatar(userId int, c *gin.Context) (string, error)
+	//UploadAvatar(profileId int, directory string) error
 }
 
 type ChatList interface {

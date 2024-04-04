@@ -93,8 +93,8 @@ func (s *AuthService) ResetPassword(email, password string) error {
 
 func SendEmail(email string) error {
 	// sender data
-	from := os.Getenv("FromEmailAddr") //ex: "John.Doe@gmail.com"
-	password := os.Getenv("SMTPpwd")   // ex: "ieiemcjdkejspqz"
+	from := os.Getenv("FROM_EMAIL") //ex: "John.Doe@gmail.com"
+	password := os.Getenv("SMTP_PWD")   // ex: "ieiemcjdkejspqz"
 	// receiver address privided through toEmail argument
 	to := []string{email}
 	// smtp - Simple Mail Transfer Protocol
@@ -107,7 +107,7 @@ func SendEmail(email string) error {
 	// https must be used since we are sending personal data through url parameters
 
 	//  ???????
-	body := "<body><a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"http://localhost:3000/main\">Reset Password</a></body>"
+	body := "<body><a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize\">Reset Password</a></body>"
 
 	fmt.Println("body:", body)
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"

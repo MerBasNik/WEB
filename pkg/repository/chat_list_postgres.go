@@ -24,15 +24,15 @@ func (r *ChatListPostgres) Create(userId int, list chat.ChatList) (int, error) {
 	}
 
 	var id int
-	createListQuery := fmt.Sprintf("INSERT INTO %s title VALUES ($1, $2) RETURNING id", chatListsTable)
-	row := tx.QueryRow(createListQuery, list.Title)//, list.Description)
+	createListQuery := fmt.Sprintf("INSERT INTO %s title VALUES $1 RETURNING id", chatListsTable)
+	row := tx.QueryRow(createListQuery, list.Title)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
 		return 0, err
 	}
 
-	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, list_id) VALUES ($1, $2)", usersListsTable)
-	_, err = tx.Exec(createUsersListQuery, userId, id)
+	createUsersListQuery := fmt.Sprintf("INSERT INTO %s tl SET chatlists_id=$1 WHERE tl.user_id = $2", usersListsTable)
+	_, err = tx.Exec(createUsersListQuery, id, userId)
 	if err != nil {
 		tx.Rollback()
 		return 0, err
@@ -44,7 +44,7 @@ func (r *ChatListPostgres) Create(userId int, list chat.ChatList) (int, error) {
 func (r *ChatListPostgres) GetAll(userId int) ([]chat.ChatList, error) {
 	var lists []chat.ChatList
 
-	query := fmt.Sprintf("SELECT tl.id, tl.title FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1",
+	query := fmt.Sprintf("SELECT tl.id, tl.title FROM %s tl INNER JOIN %s ul on tl.id = ul.chatlists_id WHERE ul.user_id = $1",
 		chatListsTable, usersListsTable)
 	err := r.db.Select(&lists, query, userId)
 
@@ -54,7 +54,7 @@ func (r *ChatListPostgres) GetAll(userId int) ([]chat.ChatList, error) {
 func (r *ChatListPostgres) GetById(userId, listId int) (chat.ChatList, error) {
 	var list chat.ChatList
 
-	query := fmt.Sprintf(`SELECT tl.id, tl.title FROM %s tl INNER JOIN %s ul on tl.id = ul.list_id WHERE ul.user_id = $1 AND ul.list_id = $2`,
+	query := fmt.Sprintf(`SELECT tl.id, tl.title FROM %s tl INNER JOIN %s ul on tl.id = ul.chatlists_id WHERE ul.user_id = $1 AND ul.chatlists_id = $2`,
 		chatListsTable, usersListsTable)
 	err := r.db.Get(&list, query, userId, listId)
 
@@ -62,7 +62,7 @@ func (r *ChatListPostgres) GetById(userId, listId int) (chat.ChatList, error) {
 }
 
 func (r *ChatListPostgres) Delete(userId, listId int) error {
-	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.list_id AND ul.user_id=$1 AND ul.list_id=$2",
+	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.chatlists_id AND ul.user_id=$1 AND ul.chatlists_id=$2",
 		chatListsTable, usersListsTable)
 	_, err := r.db.Exec(query, userId, listId)
 
@@ -91,7 +91,7 @@ func (r *ChatListPostgres) Update(userId, listId int, input chat.UpdateListInput
 	// title=$1, description=$2
 	setQuery := strings.Join(setValues, ", ")
 
-	query := fmt.Sprintf("UPDATE %s tl SET %s FROM %s ul WHERE tl.id = ul.list_id AND ul.list_id=$%d AND ul.user_id=$%d",
+	query := fmt.Sprintf("UPDATE %s tl SET %s FROM %s ul WHERE tl.id = ul.chatlists_id AND ul.chatlists_id=$%d AND ul.user_id=$%d",
 		chatListsTable, setQuery, usersListsTable, argId, argId+1)
 	args = append(args, listId, userId)
 

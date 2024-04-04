@@ -38,40 +38,39 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		profile := api.Group("/profile")
 		{
-			profile.POST("/createprofile", h.createProfile)
+			profile.POST("/create_profile", h.createProfile)
+			profile.PUT("/edit_profile/:prof_id", h.editProfile)
+			profile.GET("/get_profile/:prof_id", h.getProfile)
+			profile.PUT("/upload_avatar", h.uploadAvatar)
 
-			hobby := profile.Group("/hobbys")
+			hobby := profile.Group(":prof_id/hobby")
 			{
-				hobby.POST("/createHobby", h.createHobby)
-				hobby.GET("/getHobby", h.getAllHobby)
-				hobby.DELETE("/deleteHobby", h.deleteHobby)
+				hobby.POST("/create_hobby", h.createHobby)
+				hobby.GET("/get_hobby", h.getAllHobby)
+				hobby.DELETE("/delete_hobby/:hobby_id", h.deleteHobby)
 			}
-
-			profile.PUT("/edit", h.editProfile)
-			profile.GET("/get", h.getProfile)
-			
 		}
 
 		chats := api.Group("/chats")
 		{
-			chats.POST("/", h.createList)
-			chats.GET("/", h.getAllLists)
-			chats.GET("/:id", h.getListById)
-			chats.PUT("/:id", h.updateList)
-			chats.DELETE("/:id", h.deleteList)
+			chats.POST("/create_chat", h.createList)
+			chats.GET("/get_all_chats", h.getAllLists)
+			chats.GET("/get_chat/:chat_id", h.getListById)
+			chats.PUT("/update_chat/:chat_id", h.updateList)
+			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
 
-			items := chats.Group(":id/items")
+			items := chats.Group(":chat_id/items")
 			{
-				items.POST("/", h.createItem)
-				items.GET("/", h.getAllItems)
+				items.POST("/create_item", h.createItem)
+				items.GET("/get_all_items", h.getAllItems)
 			}
 		}
 
 		items := api.Group("/items")
 		{
-			items.GET("/:id", h.getItemById)
-			items.PUT("/:id", h.updateItem)
-			items.DELETE("/:id", h.deleteItem)
+			items.GET("/get_item/:item_id", h.getItemById)
+			items.PUT("/update_item/:item_id", h.updateItem)
+			items.DELETE("/delete_item/:item_id", h.deleteItem)
 		}
 	}
 
