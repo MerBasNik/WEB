@@ -96,7 +96,7 @@ func (h *Handler) signIn(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /auth/reset-password/{token} [post]
+// @Router /auth/reset-password/{token} [put]
 func (h *Handler) resetPassword(c *gin.Context) {
 	token, err := strconv.Atoi(c.Param("token"))
 	if err != nil {
