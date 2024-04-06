@@ -33,6 +33,8 @@ definitions:
         type: string
       findstatus:
         type: boolean
+      id:
+        type: integer
       name:
         type: string
       photo:
@@ -44,22 +46,29 @@ definitions:
     required:
     - city
     - name
+    - photo
     - surname
     - telegram
+    type: object
+  chat.ResetPasswordInput:
+    properties:
+      password:
+        type: string
+      password-repeat:
+        type: string
+    required:
+    - password
+    - password-repeat
     type: object
   chat.UpdateItemInput:
     properties:
       description:
         type: string
-      done:
-        type: boolean
       title:
         type: string
     type: object
   chat.UpdateListInput:
     properties:
-      description:
-        type: string
       title:
         type: string
     type: object
@@ -80,6 +89,8 @@ definitions:
     properties:
       email:
         type: string
+      id:
+        type: integer
       password:
         type: string
     required:
@@ -90,6 +101,8 @@ definitions:
     properties:
       description:
         type: string
+      id:
+        type: integer
     required:
     - description
     type: object
@@ -851,7 +864,7 @@ paths:
       description: forgot password
       operationId: forgot-password
       parameters:
-      - description: credentials
+      - description: email
         in: body
         name: input
         required: true
@@ -881,6 +894,50 @@ paths:
           schema:
             $ref: '#/definitions/handler.errorResponse'
       summary: Forgot Password
+      tags:
+      - auth
+  /auth/reset-password/{token}:
+    post:
+      consumes:
+      - application/json
+      description: reset password
+      operationId: reset-password
+      parameters:
+      - description: Token
+        in: path
+        name: token
+        required: true
+        type: string
+      - description: passwords
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ResetPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Reset Password
       tags:
       - auth
   /auth/sign-in:

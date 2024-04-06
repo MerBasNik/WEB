@@ -1120,12 +1120,78 @@ const docTemplate = `{
                 "operationId": "forgot-password",
                 "parameters": [
                     {
-                        "description": "credentials",
+                        "description": "email",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/chat.ForgotPasswordInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/reset-password/{token}": {
+            "post": {
+                "description": "reset password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Reset Password",
+                "operationId": "reset-password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "token",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "passwords",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.ResetPasswordInput"
                         }
                     }
                 ],
@@ -1330,6 +1396,7 @@ const docTemplate = `{
             "required": [
                 "city",
                 "name",
+                "photo",
                 "surname",
                 "telegram"
             ],
@@ -1339,6 +1406,9 @@ const docTemplate = `{
                 },
                 "findstatus": {
                     "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -1354,14 +1424,26 @@ const docTemplate = `{
                 }
             }
         },
+        "chat.ResetPasswordInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "password-repeat"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "password-repeat": {
+                    "type": "string"
+                }
+            }
+        },
         "chat.UpdateItemInput": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
-                },
-                "done": {
-                    "type": "boolean"
                 },
                 "title": {
                     "type": "string"
@@ -1371,9 +1453,6 @@ const docTemplate = `{
         "chat.UpdateListInput": {
             "type": "object",
             "properties": {
-                "description": {
-                    "type": "string"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -1409,6 +1488,9 @@ const docTemplate = `{
                 "email": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "password": {
                     "type": "string"
                 }
@@ -1422,6 +1504,9 @@ const docTemplate = `{
             "properties": {
                 "description": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },

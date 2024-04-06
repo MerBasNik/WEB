@@ -1114,12 +1114,78 @@
                 "operationId": "forgot-password",
                 "parameters": [
                     {
-                        "description": "credentials",
+                        "description": "email",
                         "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/chat.ForgotPasswordInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/reset-password/{token}": {
+            "post": {
+                "description": "reset password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Reset Password",
+                "operationId": "reset-password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "token",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "passwords",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.ResetPasswordInput"
                         }
                     }
                 ],
@@ -1324,6 +1390,7 @@
             "required": [
                 "city",
                 "name",
+                "photo",
                 "surname",
                 "telegram"
             ],
@@ -1333,6 +1400,9 @@
                 },
                 "findstatus": {
                     "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -1348,14 +1418,26 @@
                 }
             }
         },
+        "chat.ResetPasswordInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "password-repeat"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "password-repeat": {
+                    "type": "string"
+                }
+            }
+        },
         "chat.UpdateItemInput": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
-                },
-                "done": {
-                    "type": "boolean"
                 },
                 "title": {
                     "type": "string"
@@ -1365,9 +1447,6 @@
         "chat.UpdateListInput": {
             "type": "object",
             "properties": {
-                "description": {
-                    "type": "string"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -1403,6 +1482,9 @@
                 "email": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "integer"
+                },
                 "password": {
                     "type": "string"
                 }
@@ -1416,6 +1498,9 @@
             "properties": {
                 "description": {
                     "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },

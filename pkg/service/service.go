@@ -7,10 +7,11 @@ import (
 
 type Authorization interface {
 	CreateUser(user chat.User) (int, error)
+	GetUserId(email string) (chat.User, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
-	ForgotPassword(input string) error
-	ResetPassword(email, password string) error 
+	ForgotPassword(input string, id int) (string, error)
+	ResetPassword(userId int, password string) error 
 }
 
 type Profile interface {

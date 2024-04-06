@@ -37,6 +37,10 @@ func (s *AuthService) CreateUser(user chat.User) (int, error) {
 	return s.repo.CreateUser(user)
 }
 
+func (s *AuthService) GetUserId(email string) (chat.User, error) {
+	return s.repo.GetUserId(email)
+}
+
 func (s *AuthService) GenerateToken(email, password string) (string, error) {
 	user, err := s.repo.GetUser(email, generatePasswordHash(password))
 	if err != nil {
@@ -81,17 +85,30 @@ func generatePasswordHash(password string) string {
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
-func (s *AuthService) ForgotPassword(input string) error {
-	err := SendEmail(input)
-	return err
+func (s *AuthService) ForgotPassword(input string, id int) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		id,
+	})
+	
+	t, err := token.SignedString([]byte(signingKey))
+	if err != nil {
+		return "", err
+	}
+
+	err = SendEmail(input, t)
+	return t, err
 }
 
-func (s *AuthService) ResetPassword(email, password string) error {
+func (s *AuthService) ResetPassword(userId int, password string) error {
 	passwordHash := generatePasswordHash(password)
-	return s.repo.ResetPassword(email, passwordHash)
+	return s.repo.ResetPassword(userId, passwordHash)
 }
 
-func SendEmail(email string) error {
+func SendEmail(email, accessToken string) error {
 	// sender data
 	from := os.Getenv("FROM_EMAIL") //ex: "John.Doe@gmail.com"
 	password := os.Getenv("SMTP_PWD")   // ex: "ieiemcjdkejspqz"
@@ -107,7 +124,14 @@ func SendEmail(email string) error {
 	// https must be used since we are sending personal data through url parameters
 
 	//  ???????
-	body := "<body><a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize\">Reset Password</a></body>"
+	body := "<body>Hello, you have received an email with information to change your password.\n"+
+	"To set a new password, you need to click on the link below.\n"+
+	"You will be redirected to the rndmCoffee company page,\n"+
+	"where you can successfully complete this operation.\n"+
+	"https://infotech12.eljur.ru/authorize" + accessToken + 
+	"<a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize/" +
+	accessToken + "\">RESET PASSWORD</a>\n If you haven't forgotten your password, you can ignore this email.\n" + 
+	"With all due respect to you,\n the rndmCoffee team\n</body>"
 
 	fmt.Println("body:", body)
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"

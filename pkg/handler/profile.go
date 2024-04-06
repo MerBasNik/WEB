@@ -176,14 +176,14 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 
 	// Create the uploads folder if it doesn't
 	// already exist
-	err = os.MkdirAll("../avatars", os.ModePerm)
+	err = os.MkdirAll("./avatars", os.ModePerm)
 	if err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, "error while mkdir ../avatars")
+		NewErrorResponse(c, http.StatusBadRequest, "error while mkdir ./avatars")
 		return
 	}
 
 	// Create a new file in the uploads directory
-	avatarFilename := fmt.Sprintf("../avatars/%d_%d_%s", time.Now().Unix(), userId, format)
+	avatarFilename := fmt.Sprintf("./avatars/%d_%d_%s", time.Now().Unix(), userId, format)
 	dst, err := os.Create(avatarFilename)
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "error create new file")
