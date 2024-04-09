@@ -1,7 +1,9 @@
 package service
 
 import (
+	"math/rand"
 	"crypto/sha1"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"net/smtp"
@@ -35,10 +37,6 @@ func NewAuthService(repo repository.Authorization) *AuthService {
 func (s *AuthService) CreateUser(user chat.User) (int, error) {
 	user.Password = generatePasswordHash(user.Password)
 	return s.repo.CreateUser(user)
-}
-
-func (s *AuthService) GetUserId(email string) (chat.User, error) {
-	return s.repo.GetUserId(email)
 }
 
 func (s *AuthService) GenerateToken(email, password string) (string, error) {
@@ -85,30 +83,65 @@ func generatePasswordHash(password string) string {
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
 }
 
-func (s *AuthService) ForgotPassword(input string, id int) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
-			IssuedAt:  time.Now().Unix(),
-		},
-		id,
-	})
-	
-	t, err := token.SignedString([]byte(signingKey))
+var charset = []byte("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+var number = []byte("0123456789")
+var alphaNumeric = append(charset, number...)
+
+func randStr(n int) string {
+	b := make([]byte, n)
+	for i := range b {
+		b[i] = alphaNumeric[rand.Intn(len(alphaNumeric))]
+	}
+	return string(b)
+}
+
+func Encode(s string) string {
+	data := base64.StdEncoding.EncodeToString([]byte(s))
+	return string(data)
+}
+
+func Decode(s string) (string, error) {
+	data, err := base64.StdEncoding.DecodeString(s)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
+func (s *AuthService) ForgotPassword(input string) (string, error) {
+	token := randStr(30)
+	err := s.repo.SetUserToken(token, input)
 	if err != nil {
 		return "", err
 	}
 
-	err = SendEmail(input, t)
-	return t, err
+	PasswordResetToken := Encode(token)
+	//PasswordResetAt := time.Now().Add(time.Minute * 15)
+	err = SendEmail(input, PasswordResetToken)
+	return PasswordResetToken, err
 }
 
-func (s *AuthService) ResetPassword(userId int, password string) error {
+func (s *AuthService) ResetPassword(resetToken, password string) error {
+	token, err := Decode(resetToken)
+	if err != nil {
+		return errors.New("token during decoding false")
+	}
+
+	user, err := s.repo.GetUserEmail(token)
+	if err != nil {
+		return errors.New("error for get user email")
+	}
+
+	err = s.repo.DeleteUserToken(user)
+	if err != nil {
+		return errors.New("error for delete user token")
+	}
+
 	passwordHash := generatePasswordHash(password)
-	return s.repo.ResetPassword(userId, passwordHash)
+	return s.repo.ResetPassword(user.Email, passwordHash)
 }
 
-func SendEmail(email, accessToken string) error {
+func SendEmail(email, resetToken string) error {
 	// sender data
 	from := os.Getenv("FROM_EMAIL") //ex: "John.Doe@gmail.com"
 	password := os.Getenv("SMTP_PWD")   // ex: "ieiemcjdkejspqz"
@@ -124,23 +157,23 @@ func SendEmail(email, accessToken string) error {
 	// https must be used since we are sending personal data through url parameters
 
 	//  ???????
-	body := "<body>Hello, you have received an email with information to change your password.\n"+
-	"To set a new password, you need to click on the link below.\n"+
-	"You will be redirected to the rndmCoffee company page,\n"+
-	"where you can successfully complete this operation.\n"+
-	"https://infotech12.eljur.ru/authorize" + accessToken + 
-	"<a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize/" +
-	accessToken + "\">RESET PASSWORD</a>\n If you haven't forgotten your password, you can ignore this email.\n" + 
-	"With all due respect to you,\n the rndmCoffee team\n</body>"
+	body := "<body>Hello, you have received an email with information to change your password.<br>"+
+	"To set a new password, you need to click on the link below.<br>"+
+	"You will be redirected to the rndmCoffee company page,<br>"+
+	"where you can successfully complete this operation.<br><br>"+
+	"https://infotech12.eljur.ru/authorize" + resetToken + 
+	"<a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize/"+resetToken+
+	"\"><br><br>RESET PASSWORD</a><br><br> If you haven't forgotten your password, you can ignore this email.<br><br>" + 
+	"With all due respect to you,<br> the rndmCoffee team</body>"
 
-	fmt.Println("body:", body)
+	//fmt.Println("body:", body)
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	message := []byte(subject + mime + body)
 	// athentication data
 	// func PlainAuth(identity, username, password, host string) Auth
 	auth := smtp.PlainAuth("", from, password, host)
 	// func SendMail(addr string, a Auth, from string, to []string, msg []byte) error
-	fmt.Println("message:", string(message))
+	//fmt.Println("message:", string(message))
 	err := smtp.SendMail(address, auth, from, to, message)
 	return err
 }

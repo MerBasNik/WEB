@@ -93,6 +93,8 @@ definitions:
         type: integer
       password:
         type: string
+      token:
+        type: string
     required:
     - email
     - password
@@ -897,7 +899,7 @@ paths:
       tags:
       - auth
   /auth/reset-password/{token}:
-    post:
+    put:
       consumes:
       - application/json
       description: reset password

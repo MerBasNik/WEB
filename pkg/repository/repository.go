@@ -8,8 +8,10 @@ import (
 type Authorization interface {
 	CreateUser(user chat.User) (int, error)
 	GetUser(email, password string) (chat.User, error)
-	GetUserId(email string) (chat.User, error)
-	ResetPassword(userId int, password string) error 
+	GetUserEmail(token string) (chat.User, error)
+	ResetPassword(email, password string) error
+	DeleteUserToken(user chat.User) error
+	SetUserToken(token, email string) error 
 }
 
 type Profile interface {

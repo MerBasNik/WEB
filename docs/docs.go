@@ -1164,7 +1164,7 @@ const docTemplate = `{
             }
         },
         "/auth/reset-password/{token}": {
-            "post": {
+            "put": {
                 "description": "reset password",
                 "consumes": [
                     "application/json"
@@ -1492,6 +1492,9 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "password": {
+                    "type": "string"
+                },
+                "token": {
                     "type": "string"
                 }
             }

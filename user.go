@@ -6,6 +6,7 @@ type User struct {
 	Id       	 int    	`json:"id" db:"id"`
 	Email	 	 string 	`json:"email" db:"email" binding:"required"`
 	Password 	 string 	`json:"password" db:"password" binding:"required"`
+	Token		 string     `json:"token" db:"token"`
 }
 
 type Profile struct {

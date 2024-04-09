@@ -2,7 +2,8 @@ CREATE TABLE users
 (
     id                  serial       PRIMARY KEY,
     password_hash       varchar(255) not null,
-    email	            varchar(255) not null unique
+    email	            varchar(255) not null unique,
+    token	            varchar(255)
 );
 
 CREATE TABLE users_profile

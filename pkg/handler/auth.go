@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
 
 	chat "github.com/MerBasNik/rndmCoffee"
 	"github.com/gin-gonic/gin"
@@ -98,8 +96,8 @@ func (h *Handler) signIn(c *gin.Context) {
 // @Failure default {object} errorResponse
 // @Router /auth/reset-password/{token} [put]
 func (h *Handler) resetPassword(c *gin.Context) {
-	token, err := strconv.Atoi(c.Param("token"))
-	if err != nil {
+	token := c.Param("token")
+	if token == "" {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return
 	}
@@ -110,13 +108,7 @@ func (h *Handler) resetPassword(c *gin.Context) {
 		return
 	}
 
-	userId, err := h.services.Authorization.ParseToken(fmt.Sprint(token))
-	if err != nil {
-		NewErrorResponse(c, http.StatusUnauthorized, err.Error())
-		return
-	}
-
-	err = h.services.Authorization.ResetPassword(userId, input.Password)
+	err := h.services.Authorization.ResetPassword(token, input.Password)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -147,13 +139,7 @@ func (h *Handler) forgotPassword(c *gin.Context) {
 		return
 	}
 
-	user, err := h.services.Authorization.GetUserId(input.Email)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	token, err := h.services.Authorization.ForgotPassword(input.Email, user.Id)
+	token, err := h.services.Authorization.ForgotPassword(input.Email)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
