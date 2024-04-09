@@ -1,6 +1,6 @@
 basePath: /
 definitions:
-  chat.ChatList:
+  chat.ChatItem:
     properties:
       description:
         type: string
@@ -11,32 +11,121 @@ definitions:
     required:
     - title
     type: object
-  chat.ListsItem:
+  chat.ChatList:
     properties:
       id:
         type: integer
-      itemId:
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  chat.ForgotPasswordInput:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  chat.Profile:
+    properties:
+      city:
+        type: string
+      findstatus:
+        type: boolean
+      id:
         type: integer
-      listId:
-        type: integer
+      name:
+        type: string
+      photo:
+        type: string
+      surname:
+        type: string
+      telegram:
+        type: string
+    required:
+    - city
+    - name
+    - photo
+    - surname
+    - telegram
+    type: object
+  chat.ResetPasswordInput:
+    properties:
+      password:
+        type: string
+      password-repeat:
+        type: string
+    required:
+    - password
+    - password-repeat
+    type: object
+  chat.UpdateItemInput:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  chat.UpdateListInput:
+    properties:
+      title:
+        type: string
+    type: object
+  chat.UpdateProfile:
+    properties:
+      city:
+        type: string
+      name:
+        type: string
+      photo:
+        type: string
+      surname:
+        type: string
+      telegram:
+        type: string
     type: object
   chat.User:
     properties:
-      name:
+      email:
         type: string
+      id:
+        type: integer
       password:
         type: string
-      username:
+      token:
         type: string
     required:
-    - name
+    - email
     - password
-    - username
+    type: object
+  chat.UserHobby:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+    required:
+    - description
     type: object
   handler.errorResponse:
     properties:
       message:
         type: string
+    type: object
+  handler.getAllHobbyResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/chat.UserHobby'
+        type: array
+    type: object
+  handler.getAllListsItemsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/chat.ChatItem'
+        type: array
     type: object
   handler.getAllListsResponse:
     properties:
@@ -47,13 +136,18 @@ definitions:
     type: object
   handler.signInInput:
     properties:
+      email:
+        type: string
       password:
         type: string
-      username:
-        type: string
     required:
+    - email
     - password
-    - username
+    type: object
+  handler.statusResponse:
+    properties:
+      status:
+        type: string
     type: object
 host: localhost:8000
 info:
@@ -62,19 +156,31 @@ info:
   title: Chat App API
   version: "1.0"
 paths:
-  /api/lists:
-    get:
+  /api/chats/{chat_id}/items/create_item:
+    post:
       consumes:
       - application/json
-      description: get all lists
-      operationId: get-all-lists
+      description: create chat item
+      operationId: create-chat-item
+      parameters:
+      - description: Chat Id
+        in: path
+        name: chat_id
+        required: true
+        type: integer
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ChatItem'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.getAllListsResponse'
+            type: integer
         "400":
           description: Bad Request
           schema:
@@ -93,14 +199,55 @@ paths:
             $ref: '#/definitions/handler.errorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get All Lists
+      summary: Create Chat Item
       tags:
-      - lists
+      - chats items
+  /api/chats/{chat_id}/items/get_all_items:
+    get:
+      consumes:
+      - application/json
+      description: get all chats items
+      operationId: get-all-chats-items
+      parameters:
+      - description: Chat Id
+        in: path
+        name: chat_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllListsItemsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Chats Items
+      tags:
+      - chats items
+  /api/chats/create_chat:
     post:
       consumes:
       - application/json
-      description: create chat list
-      operationId: create-list
+      description: create chat
+      operationId: create-chat
       parameters:
       - description: list info
         in: body
@@ -133,29 +280,28 @@ paths:
             $ref: '#/definitions/handler.errorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Create chat list
+      summary: Create chat
       tags:
-      - lists
-  /api/lists/:id:
-    get:
+      - chats
+  /api/chats/delete_chat/{chat_id}:
+    delete:
       consumes:
       - application/json
-      description: get list by id
-      operationId: get-list-by-id
+      description: delete chat
+      operationId: delete-chat
       parameters:
-      - description: list info
-        in: body
-        name: input
+      - description: Chat Id
+        in: path
+        name: chat_id
         required: true
-        schema:
-          $ref: '#/definitions/chat.ChatList'
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/chat.ListsItem'
+            $ref: '#/definitions/handler.statusResponse'
         "400":
           description: Bad Request
           schema:
@@ -174,9 +320,628 @@ paths:
             $ref: '#/definitions/handler.errorResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get List By Id
+      summary: Delete Chat
       tags:
-      - lists
+      - chats
+  /api/chats/get_all_chats:
+    get:
+      consumes:
+      - application/json
+      description: get all chats
+      operationId: get-all-chats
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllListsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Chats
+      tags:
+      - chats
+  /api/chats/get_chat/{chat_id}:
+    get:
+      consumes:
+      - application/json
+      description: get chat by id
+      operationId: get-chat-by-id
+      parameters:
+      - description: Chat Id
+        in: path
+        name: chat_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/chat.ChatList'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Chat By Id
+      tags:
+      - chats
+  /api/chats/update_chat/{chat_id}:
+    put:
+      consumes:
+      - application/json
+      description: update chat
+      operationId: update-chat
+      parameters:
+      - description: Chat Id
+        in: path
+        name: chat_id
+        required: true
+        type: integer
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UpdateListInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Chat
+      tags:
+      - chats
+  /api/items/delete_item/{item_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete chat item
+      operationId: delete-chat-item
+      parameters:
+      - description: Item Id
+        in: path
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Chat Item
+      tags:
+      - chats items
+  /api/items/get_item/{item_id}:
+    get:
+      consumes:
+      - application/json
+      description: get chat item by id
+      operationId: get-chat-item-by-id
+      parameters:
+      - description: Item Id
+        in: path
+        name: item_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/chat.ChatItem'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Chat Item By Id
+      tags:
+      - chats items
+  /api/items/update_item/{item_id}:
+    put:
+      consumes:
+      - application/json
+      description: update chat item
+      operationId: update-chat-item
+      parameters:
+      - description: Item Id
+        in: path
+        name: item_id
+        required: true
+        type: integer
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UpdateItemInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Chat Item
+      tags:
+      - chats items
+  /api/profile/{prof_id}/hobby/create_hobby:
+    post:
+      consumes:
+      - application/json
+      description: create hobby
+      operationId: create-hobby
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UserHobby'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create hobby
+      tags:
+      - hobby
+  /api/profile/{prof_id}/hobby/delete_hobby/{hobby_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete hobby
+      operationId: delete-hobby
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      - description: Hobby Id
+        in: path
+        name: hobby_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Hobby
+      tags:
+      - hobby
+  /api/profile/{prof_id}/hobby/get_hobby:
+    get:
+      consumes:
+      - application/json
+      description: get all hobby
+      operationId: get-all-hobby
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllHobbyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Hobby
+      tags:
+      - hobby
+  /api/profile/create_profile:
+    post:
+      consumes:
+      - application/json
+      description: create profile
+      operationId: create-profile
+      parameters:
+      - description: profile info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.Profile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Profile
+      tags:
+      - profile
+  /api/profile/edit_profile/{prof_id}:
+    put:
+      consumes:
+      - application/json
+      description: edit profile
+      operationId: edit-profile
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      - description: profile info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UpdateProfile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Profile
+      tags:
+      - profile
+  /api/profile/get_profile/{prof_id}:
+    get:
+      consumes:
+      - application/json
+      description: get profile
+      operationId: get-profile
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Profile
+      tags:
+      - profile
+  /api/profile/upload_avatar:
+    put:
+      consumes:
+      - multipart/form-data
+      description: updates user avatar
+      operationId: upload-avatar
+      parameters:
+      - description: Avatar image file (JPG, JPEG, PNG, or GIF)
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Upload Avatar
+      tags:
+      - profile
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: forgot password
+      operationId: forgot-password
+      parameters:
+      - description: email
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ForgotPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Forgot Password
+      tags:
+      - auth
+  /auth/reset-password/{token}:
+    put:
+      consumes:
+      - application/json
+      description: reset password
+      operationId: reset-password
+      parameters:
+      - description: Token
+        in: path
+        name: token
+        required: true
+        type: string
+      - description: passwords
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ResetPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Reset Password
+      tags:
+      - auth
   /auth/sign-in:
     post:
       consumes:

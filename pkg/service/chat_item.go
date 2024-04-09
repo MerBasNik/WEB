@@ -37,5 +37,9 @@ func (s *ChatItemService) Delete(userId, itemId int) error {
 }
 
 func (s *ChatItemService) Update(userId, itemId int, input chat.UpdateItemInput) error {
+	if err := input.Validate(); err != nil {
+		return err
+	}
+	
 	return s.repo.Update(userId, itemId, input)
 }

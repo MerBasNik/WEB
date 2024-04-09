@@ -6,11 +6,15 @@ import (
 )
 
 const (
-	usersTable      = "users"
-	chatListsTable  = "chat_lists"
-	usersListsTable = "users_lists"
-	chatItemsTable  = "chat_items"
-	listsItemsTable = "lists_items"
+	usersTable        	   = "users"
+	chatListsTable    	   = "chat_lists"
+	chatItemsTable    	   = "chat_items"
+	itemsListsTable   	   = "items_lists"
+	userHobbyTable 	       = "users_hobby"
+	usersProfileTable      = "users_profile"
+	usersProfileListsTable = "users_profile_lists"
+	usersHobbyListsTable   = "users_hobby_lists"
+	usersChatListsTable    = "users_chat_lists"
 )
 
 type Config struct {

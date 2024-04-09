@@ -42,11 +42,11 @@ export const ReEntryScreen = () => {
 							event.preventDefault();
 
 							const data = {
-								username: InputNameEmail,
+								email: InputNameEmail,
 								password: InputNamePassword,
 							};
 
-							if (data.username.length == 0) {
+							if (data.email.length == 0) {
 								setInputErrorEmail(true);
 								return;
 							}
@@ -87,7 +87,7 @@ export const ReEntryScreen = () => {
 								title={"Email"}
 								type={"email"}
 								autoComplete={true}
-								id={"username"}
+								id={"email"}
 								error={InputErrorEmail}
 								setErrorInput={setInputErrorEmail}
 								setErrorData={setClassesError}

@@ -7,8 +7,21 @@ import (
 
 type Authorization interface {
 	CreateUser(user chat.User) (int, error)
-	GenerateToken(username, password string) (string, error)
+	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)
+	ForgotPassword(input string) (string, error)
+	ResetPassword(resetToken, password string) error 
+}
+
+type Profile interface {
+	CreateProfile(userId int, profile chat.Profile) (int, error)
+	GetProfile(userId, profileId int) (chat.Profile, error)
+	EditProfile(userId, profileId int, input chat.UpdateProfile) error
+
+	CreateHobby(userId int, hobby chat.UserHobby) (int, error)
+	GetAllHobby(userId int) ([]chat.UserHobby, error)
+	DeleteHobby(userId, hobbyId int) error
+	//UploadAvatar(profileId int, directory string) error
 }
 
 type ChatList interface {
@@ -29,6 +42,7 @@ type ChatItem interface {
 
 type Service struct {
 	Authorization
+	Profile
 	ChatList
 	ChatItem
 }
@@ -36,6 +50,7 @@ type Service struct {
 func NewService(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
+		Profile: 	   NewProfileService(repos.Profile),
 		ChatList:      NewChatListService(repos.ChatList),
 		ChatItem:      NewChatItemService(repos.ChatItem, repos.ChatList),
 	}
