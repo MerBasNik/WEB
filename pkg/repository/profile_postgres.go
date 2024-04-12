@@ -116,7 +116,7 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 // }
 
 
-func (r *ProfilePostgres) CreateHobby(userId int, hobby chat.UserHobby) (int, error) {
+func (r *ProfilePostgres) CreateHobby(profId int, hobby chat.UserHobby) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -132,7 +132,7 @@ func (r *ProfilePostgres) CreateHobby(userId int, hobby chat.UserHobby) (int, er
 
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
-	_, err = tx.Exec(createUsersListQuery, userId, id)
+	_, err = tx.Exec(createUsersListQuery, profId, id)
 	if err != nil {
 		tx.Rollback()
 		return 0, err
@@ -141,20 +141,20 @@ func (r *ProfilePostgres) CreateHobby(userId int, hobby chat.UserHobby) (int, er
 	return id, tx.Commit()
 }
 
-func (r *ProfilePostgres) GetAllHobby(userId int) ([]chat.UserHobby, error) {
+func (r *ProfilePostgres) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 	var hobbylist []chat.UserHobby
 
 	query := fmt.Sprintf("SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id WHERE ul.user_id = $1",
 		userHobbyTable, usersHobbyListsTable)
-	err := r.db.Select(&hobbylist, query, userId)
+	err := r.db.Select(&hobbylist, query, profId)
 
 	return hobbylist, err
 }
 
-func (r *ProfilePostgres) DeleteHobby(userId, hobbyId int) error {
+func (r *ProfilePostgres) DeleteHobby(profId, hobbyId int) error {
 	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.userhobby_id AND ul.user_id=$1 AND ul.userhobby_id=$2",
 		userHobbyTable, usersHobbyListsTable)
-	_, err := r.db.Exec(query, userId, hobbyId)
+	_, err := r.db.Exec(query, profId, hobbyId)
 
 	return err
 }

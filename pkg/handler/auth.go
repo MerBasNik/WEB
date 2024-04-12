@@ -13,7 +13,7 @@ import (
 // @ID create-account
 // @Accept  json
 // @Produce  json
-// @Param input body chat.User true "account info"
+// @Param input body chat.UserInput true "account info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse

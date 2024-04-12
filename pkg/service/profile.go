@@ -40,16 +40,16 @@ func (s *ProfileService) GetProfile(userId, profileId int) (chat.Profile, error)
 	return s.repo.GetProfile(userId, profileId)
 }
 
-func (s *ProfileService) CreateHobby(userId int, hobby chat.UserHobby) (int, error) {
-	return s.repo.CreateHobby(userId, hobby)
+func (s *ProfileService) CreateHobby(profId int, hobby chat.UserHobby) (int, error) {
+	return s.repo.CreateHobby(profId, hobby)
 }
 
-func (s *ProfileService) GetAllHobby(userId int) ([]chat.UserHobby, error) {
-	return s.repo.GetAllHobby(userId)
+func (s *ProfileService) GetAllHobby(profId int) ([]chat.UserHobby, error) {
+	return s.repo.GetAllHobby(profId)
 }
 
-func (s *ProfileService) DeleteHobby(userId, hobbyId int) error {
-	return s.repo.DeleteHobby(userId, hobbyId)
+func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
+	return s.repo.DeleteHobby(profId, hobbyId)
 }
 
 // func (s *ProfileService) GetAvatar(userId int, c *gin.Context) (string, error) {

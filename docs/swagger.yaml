@@ -85,20 +85,6 @@ definitions:
       telegram:
         type: string
     type: object
-  chat.User:
-    properties:
-      email:
-        type: string
-      id:
-        type: integer
-      password:
-        type: string
-      token:
-        type: string
-    required:
-    - email
-    - password
-    type: object
   chat.UserHobby:
     properties:
       description:
@@ -107,6 +93,16 @@ definitions:
         type: integer
     required:
     - description
+    type: object
+  chat.UserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
     type: object
   handler.errorResponse:
     properties:
@@ -993,7 +989,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/chat.User'
+          $ref: '#/definitions/chat.UserInput'
       produces:
       - application/json
       responses:
