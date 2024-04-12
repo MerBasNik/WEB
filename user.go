@@ -2,6 +2,11 @@ package chat
 
 import "errors"
 
+type UserInput struct {
+	Email	 	 string 	`json:"email" db:"email" binding:"required"`
+	Password 	 string 	`json:"password" db:"password" binding:"required"`
+}
+
 type User struct {
 	Id       	 int    	`json:"id" db:"id"`
 	Email	 	 string 	`json:"email" db:"email" binding:"required"`

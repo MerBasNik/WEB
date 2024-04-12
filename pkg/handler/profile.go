@@ -158,7 +158,7 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 	defer file.Close()
 
 	var format = filepath.Ext(fileHeader.Filename)
-	if IsAvatarHasAllowedExtension(format) {
+	if !IsAvatarHasAllowedExtension(format) {
 		NewErrorResponse(c, http.StatusBadRequest, "it is not JPG, JPEG, PNG, GIF")
 		return
 	}
@@ -220,9 +220,9 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 // @Failure default {object} errorResponse
 // @Router /api/profile/{prof_id}/hobby/create_hobby [post]
 func (h *Handler) createHobby(c *gin.Context) {
-	userId, err := getUserId(c)
+	profId, err := strconv.Atoi(c.Param("prof_id"))
 	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return
 	}
 
@@ -232,7 +232,7 @@ func (h *Handler) createHobby(c *gin.Context) {
 		return
 	}
 
-	hobby_id, err := h.services.Profile.CreateHobby(userId, input)
+	hobby_id, err := h.services.Profile.CreateHobby(profId, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -261,13 +261,13 @@ type getAllHobbyResponse struct {
 // @Failure default {object} errorResponse
 // @Router /api/profile/{prof_id}/hobby/get_hobby [get]
 func (h *Handler) getAllHobby(c *gin.Context) {
-	userId, err := getUserId(c)
+	profId, err := strconv.Atoi(c.Param("prof_id"))
 	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return
 	}
 
-	hobbylist, err := h.services.Profile.GetAllHobby(userId)
+	hobbylist, err := h.services.Profile.GetAllHobby(profId)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -293,19 +293,19 @@ func (h *Handler) getAllHobby(c *gin.Context) {
 // @Failure default {object} errorResponse
 // @Router /api/profile/{prof_id}/hobby/delete_hobby/{hobby_id} [delete]
 func (h *Handler) deleteHobby(c *gin.Context) {
-	userId, err := getUserId(c)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
 	hobby_id, err := strconv.Atoi(c.Param("hobby_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return
 	}
 
-	err = h.services.Profile.DeleteHobby(userId, hobby_id)
+	profId, err := strconv.Atoi(c.Param("prof_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	err = h.services.Profile.DeleteHobby(profId, hobby_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -316,19 +316,10 @@ func (h *Handler) deleteHobby(c *gin.Context) {
 	})
 }
 
-func getAvatarAllowedExtensions() map[string]bool {
-	return map[string]bool{
-		"jpg":  true,
-		"jpeg": true,
-		"png":  true,
-		"gif":  true,
-	}
-}
 
-func IsAvatarHasAllowedExtension(extension string) bool {
-	if _, ok := getAvatarAllowedExtensions()[extension]; !ok {
-		return false
+func IsAvatarHasAllowedExtension(ext string) bool {
+	if ext == ".jpg" || ext == ".png" || ext == ".jpeg" || ext == ".gif" {
+		return true
 	}
-
-	return true
+	return false
 }

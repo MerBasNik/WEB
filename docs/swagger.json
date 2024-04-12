@@ -1303,7 +1303,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/chat.User"
+                            "$ref": "#/definitions/chat.UserInput"
                         }
                     }
                 ],
@@ -1472,27 +1472,6 @@
                 }
             }
         },
-        "chat.User": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
         "chat.UserHobby": {
             "type": "object",
             "required": [
@@ -1504,6 +1483,21 @@
                 },
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "chat.UserInput": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         },
