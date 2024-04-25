@@ -26,6 +26,16 @@ CREATE TABLE chat_lists
     -- description varchar(255)
 );
 
+CREATE TABLE find_users
+(
+    id          serial       PRIMARY KEY,
+    start_day   varchar(255) not null,
+    end_day     varchar(255) not null,
+    start_time  varchar(255) not null,
+    end_time    varchar(255) not null
+);
+
+
 CREATE TABLE users_hobby
 (
     id          serial       PRIMARY KEY,

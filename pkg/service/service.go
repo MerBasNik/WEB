@@ -30,6 +30,7 @@ type ChatList interface {
 	GetById(userId, listId int) (chat.ChatList, error)
 	Delete(userId, listId int) error
 	Update(userId, listId int, input chat.UpdateListInput) error
+	FindByTime(userId int, input chat.FindUserInput) ([]int, error)
 }
 
 type ChatItem interface {

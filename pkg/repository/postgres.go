@@ -15,6 +15,7 @@ const (
 	usersProfileListsTable = "users_profile_lists"
 	usersHobbyListsTable   = "users_hobby_lists"
 	usersChatListsTable    = "users_chat_lists"
+	findUsersTable		   = "find_users"
 )
 
 type Config struct {

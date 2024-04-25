@@ -92,3 +92,41 @@ func (r *ChatListPostgres) Update(userId, listId int, input chat.UpdateListInput
 	_, err := r.db.Exec(query, args...)
 	return err
 }
+
+func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) ([]int, error) {
+	var id []int
+
+	tx, err := r.db.Begin()
+	if err != nil {
+		return id, err
+	}
+
+	createListQuery := fmt.Sprintf("INSERT INTO %s (start_day, end_day, start_time, end_time) VALUES ($1, $2, $3, $4)", findUsersTable)
+	_, err = tx.Exec(createListQuery, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
+	if err != nil {
+		tx.Rollback()
+		return id, err
+	}
+
+	tx.Commit()
+
+	query := fmt.Sprintf(`SELECT tl.user_id FROM %s tl WHERE
+	((tl.start_day BETWEEN $1 AND $2) OR (tl.end_day BETWEEN $1 AND $2)) AND 
+	((tl.start_time BETWEEN $3 AND $4) OR (tl.end_time BETWEEN $3 AND $4)) AND tl.user_id!=$5`,
+		findUsersTable)
+	err = r.db.Get(&id, query, input.StartDay, input.EndDay, input.StartTime, input.EndTime, userId)
+
+	return id, err
+}
+
+func (r *ChatListPostgres) FindByHobby(userId int, input chat.FindUserInput) (int, error) {
+	var id int
+
+	query := fmt.Sprintf(`SELECT tl.user_id FROM %s tl WHERE
+	((tl.start_day BETWEEN $1 AND $2) OR (tl.end_day BETWEEN $1 AND $2)) AND 
+	((tl.start_time BETWEEN $3 AND $4) OR (tl.end_time BETWEEN $3 AND $4))`,
+		findUsersTable)
+	err := r.db.Get(&id, query, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
+
+	return id, err
+}

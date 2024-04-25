@@ -19,6 +19,13 @@ type ChatItem struct {
 	Description string `json:"description" db:"description"`
 }
 
+type FindUserInput struct {
+	StartDay 	string `json:"startday" db:"startday"`
+	EndDay 		string `json:"endday" db:"endday"`
+	StartTime 	string `json:"starttime" db:"starttime"`
+	EndTime 	string `json:"endtime" db:"endtime"`
+}
+
 type ItemLists struct {
 	Id     int
 	ChatListId int

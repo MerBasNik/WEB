@@ -15,3 +15,5 @@ DROP TABLE chat_items;
 DROP TABLE users_hobby;
 
 DROP TABLE users_profile;
+
+DROP TABLE find_users;
