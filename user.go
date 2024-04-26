@@ -52,6 +52,10 @@ type UserHobby struct {
 	Description string `json:"description" db:"description" binding:"required"`	
 }
 
+type UserHobbyInput struct {
+	Description string `json:"description" db:"description" binding:"required"`	
+}
+
 type ForgotPasswordInput struct {
 	Email 	string `json:"email" binding:"required"`
 }

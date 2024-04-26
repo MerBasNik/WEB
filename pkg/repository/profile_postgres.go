@@ -116,29 +116,37 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 // }
 
 
-func (r *ProfilePostgres) CreateHobby(profId int, hobby chat.UserHobby) (int, error) {
+func (r *ProfilePostgres) CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
+	var list_id []int
+	var id int
+	var lenth = len(hobbies) 
+
 	tx, err := r.db.Begin()
 	if err != nil {
-		return 0, err
+		return list_id, err
 	}
 
-	var id int
-	createListQuery := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1) RETURNING id", userHobbyTable)
-	row := tx.QueryRow(createListQuery, hobby.Description)
-	if err := row.Scan(&id); err != nil {
-		tx.Rollback()
-		return 0, err
+	createListQuery := fmt.Sprintf("SELECT tl.id FROM %s tl WHERE tl.description=$1", userHobbyTable)
+	for i := 0; i < lenth; i++ {
+		row := tx.QueryRow(createListQuery, hobbies[i].Description)
+		if err := row.Scan(&id); err != nil {
+			tx.Rollback()
+			return list_id, err
+		}
+		list_id = append(list_id, id)
 	}
-
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
-	_, err = tx.Exec(createUsersListQuery, profId, id)
-	if err != nil {
-		tx.Rollback()
-		return 0, err
+	for i := 0; i < lenth; i++ {
+		_, err = tx.Exec(createUsersListQuery, profId, list_id[i])
+		if err != nil {
+			tx.Rollback()
+			return list_id, err
+		}
 	}
+	
 
-	return id, tx.Commit()
+	return list_id, tx.Commit()
 }
 
 func (r *ProfilePostgres) GetAllHobby(profId int) ([]chat.UserHobby, error) {

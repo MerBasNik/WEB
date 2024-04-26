@@ -28,11 +28,12 @@ CREATE TABLE chat_lists
 
 CREATE TABLE find_users
 (
-    id          serial       PRIMARY KEY,
-    start_day   varchar(255) not null,
-    end_day     varchar(255) not null,
-    start_time  varchar(255) not null,
-    end_time    varchar(255) not null
+    id          serial PRIMARY KEY,
+    user_id     int references users (id) on delete cascade not null,
+    start_day   date   not null,
+    end_day     date   not null,
+    start_time  time   not null,
+    end_time    time   not null
 );
 
 

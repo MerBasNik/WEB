@@ -213,7 +213,7 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param   prof_id path int true "Prof Id"
-// @Param   input body chat.UserHobby true "list info"
+// @Param   input body chat.UserHobbyInput true "list info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
@@ -226,7 +226,7 @@ func (h *Handler) createHobby(c *gin.Context) {
 		return
 	}
 
-	var input chat.UserHobby
+	var input map[string][]chat.UserHobbyInput
 	if err := c.BindJSON(&input); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return

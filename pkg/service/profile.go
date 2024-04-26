@@ -40,8 +40,8 @@ func (s *ProfileService) GetProfile(userId, profileId int) (chat.Profile, error)
 	return s.repo.GetProfile(userId, profileId)
 }
 
-func (s *ProfileService) CreateHobby(profId int, hobby chat.UserHobby) (int, error) {
-	return s.repo.CreateHobby(profId, hobby)
+func (s *ProfileService) CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
+	return s.repo.CreateHobby(profId, hobbies)
 }
 
 func (s *ProfileService) GetAllHobby(profId int) ([]chat.UserHobby, error) {
