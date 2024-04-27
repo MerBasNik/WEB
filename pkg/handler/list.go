@@ -12,7 +12,7 @@ import (
 // @Security ApiKeyAuth
 // @Tags find
 // @Description find users for chat
-// @ID find-user
+// @ID find-user-by-time
 // @Accept  json
 // @Produce  json
 // @Param input body chat.FindUserInput true "list info"
@@ -46,11 +46,12 @@ func (h *Handler) findUsersByTime(c *gin.Context)  {
 }
 
 
+
 // @Summary Find Users by hobby for chat
 // @Security ApiKeyAuth
 // @Tags find
 // @Description find users by hobby for chat
-// @ID find-user
+// @ID find-user-by-hobby
 // @Accept  json
 // @Produce  json
 // @Param input body chat.FindUserInput true "list info"
@@ -84,7 +85,7 @@ func (h *Handler) findUsersByHobby(c *gin.Context)  {
 		return
 	}
 
-	c.JSON(http.StatusOK, getAllListsResponse{
+	c.JSON(http.StatusOK, getAllHobbyResponse{
 		Data: lists,
 	})
 }

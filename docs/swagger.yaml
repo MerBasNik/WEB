@@ -105,6 +105,13 @@ definitions:
     required:
     - description
     type: object
+  chat.UserHobbyInput:
+    properties:
+      description:
+        type: string
+    required:
+    - description
+    type: object
   chat.UserInput:
     properties:
       email:
@@ -335,7 +342,7 @@ paths:
       consumes:
       - application/json
       description: find users for chat
-      operationId: find-user
+      operationId: find-user-by-time
       parameters:
       - description: list info
         in: body
@@ -369,6 +376,47 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Find Users for chat
+      tags:
+      - find
+  /api/chats/find_chats_users_by_hobby:
+    post:
+      consumes:
+      - application/json
+      description: find users by hobby for chat
+      operationId: find-user-by-hobby
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.FindUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find Users by hobby for chat
       tags:
       - find
   /api/chats/get_all_chats:
@@ -634,7 +682,19 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/chat.UserHobby'
+          $ref: '#/definitions/chat.UserHobbyInput'
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UserHobbyInput'
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UserHobbyInput'
       produces:
       - application/json
       responses:

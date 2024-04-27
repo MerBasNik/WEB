@@ -116,10 +116,9 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 // }
 
 
-func (r *ProfilePostgres) CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
+func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
 	var list_id []int
 	var id int
-	var lenth = len(hobbies) 
 
 	tx, err := r.db.Begin()
 	if err != nil {
@@ -127,17 +126,20 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies []chat.UserHobbyInput)
 	}
 
 	createListQuery := fmt.Sprintf("SELECT tl.id FROM %s tl WHERE tl.description=$1", userHobbyTable)
-	for i := 0; i < lenth; i++ {
-		row := tx.QueryRow(createListQuery, hobbies[i].Description)
-		if err := row.Scan(&id); err != nil {
+	var desciptions = hobbies["description"]
+	var lengthOfHobbies = len(desciptions)
+	for i := 0; i < lengthOfHobbies; i++ {
+	  	row := tx.QueryRow(createListQuery, desciptions[i].Description)
+	 	if err := row.Scan(&id); err != nil {
 			tx.Rollback()
 			return list_id, err
-		}
-		list_id = append(list_id, id)
+	  	}
+	  	list_id = append(list_id, id)
 	}
+  
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
-	for i := 0; i < lenth; i++ {
+	for i := 0; i < lengthOfHobbies; i++ {
 		_, err = tx.Exec(createUsersListQuery, profId, list_id[i])
 		if err != nil {
 			tx.Rollback()

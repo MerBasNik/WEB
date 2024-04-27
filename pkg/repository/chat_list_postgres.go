@@ -119,8 +119,8 @@ func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) (int
 	return id, err
 }
 
-func (r *ChatListPostgres) FindByHobby(userId1, userId2 int) ([]chat.ChatList, error) {
-	var lists []chat.ChatList
+func (r *ChatListPostgres) FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error) {
+	var lists []chat.UserHobby
 
 	query := fmt.Sprintf(`SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id
 	WHERE ul.user_id=$1 INTERSECT SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id

@@ -18,7 +18,7 @@ type Profile interface {
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
 
-	CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error)
+	CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error)
 	GetAllHobby(profId int) ([]chat.UserHobby, error)
 	DeleteHobby(profId, hobbyId int) error
 	//UploadAvatar(profileId int, directory string) error
@@ -31,7 +31,7 @@ type ChatList interface {
 	Delete(userId, listId int) error
 	Update(userId, listId int, input chat.UpdateListInput) error
 	FindByTime(userId int, input chat.FindUserInput) (int, error)
-	FindByHobby(userId1, userId2 int) ([]chat.ChatList, error)
+	FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error)
 }
 
 type ChatItem interface {

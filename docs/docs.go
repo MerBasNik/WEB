@@ -159,7 +159,71 @@ const docTemplate = `{
                     "find"
                 ],
                 "summary": "Find Users for chat",
-                "operationId": "find-user",
+                "operationId": "find-user-by-time",
+                "parameters": [
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.FindUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/chats/find_chats_users_by_hobby": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "find users by hobby for chat",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "find"
+                ],
+                "summary": "Find Users by hobby for chat",
+                "operationId": "find-user-by-hobby",
                 "parameters": [
                     {
                         "description": "list info",
@@ -999,7 +1063,25 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/chat.UserHobby"
+                            "$ref": "#/definitions/chat.UserHobbyInput"
+                        }
+                    },
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.UserHobbyInput"
+                        }
+                    },
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.UserHobbyInput"
                         }
                     }
                 ],
@@ -1570,6 +1652,17 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "chat.UserHobbyInput": {
+            "type": "object",
+            "required": [
+                "description"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
                 }
             }
         },

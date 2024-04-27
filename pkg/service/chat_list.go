@@ -41,6 +41,6 @@ func (s *ChatListService) FindByTime(userId int, input chat.FindUserInput) (int,
 	return s.repo.FindByTime(userId, input)
 }
 
-func (s *ChatListService) FindByHobby(userId1, userId2 int) ([]chat.ChatList, error) {
+func (s *ChatListService) FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error) {
 	return s.repo.FindByHobby(userId1, userId2)
 }
