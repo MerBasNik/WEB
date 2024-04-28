@@ -12,10 +12,10 @@ CREATE TABLE users_profile
     name                varchar(255) not null,
     surname             varchar(255) not null,
     photo               varchar(255) not null,
-    country             varchar(255) not null,
-    city	            varchar(255) not null,
+    country             varchar(255),
+    city	            varchar(255),
     telegram	        varchar(255) not null,
-    date_of_birth       date         not null
+    birthday            date         default NOW()
 );
 
 CREATE TABLE chat_lists

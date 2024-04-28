@@ -8,6 +8,8 @@ DROP TABLE items_lists;
 
 DROP TABLE chat_lists;
 
+DROP TABLE find_users;
+
 DROP TABLE users;
 
 DROP TABLE chat_items;
@@ -15,5 +17,3 @@ DROP TABLE chat_items;
 DROP TABLE users_hobby;
 
 DROP TABLE users_profile;
-
-DROP TABLE find_users;

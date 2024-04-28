@@ -20,8 +20,9 @@ type Profile struct {
 	Surname  	 string 	`json:"surname" db:"surname" binding:"required"`
 	Photo 	 	 string 	`json:"photo" db:"photo" binding:"required"`
 	Telegram 	 string 	`json:"telegram" db:"telegram" binding:"required"`
-	City 	 	 string 	`json:"city" db:"city" binding:"required"`
-	FindStatus 	 bool 		`json:"findstatus" db:"findstatus"`
+	Country		 string		`json:"country" db:"country"`
+	City 	 	 string 	`json:"city" db:"city"`
+	Birthday 	 string 	`json:"birthday" db:"birthday"`
 }
 
 type UpdateProfile struct {
@@ -29,11 +30,13 @@ type UpdateProfile struct {
 	Surname  	 *string 	`json:"surname"`
 	Photo 	 	 *string 	`json:"photo"`
 	Telegram 	 *string 	`json:"telegram"`
+	Country		 *string	`json:"country"`
 	City 	 	 *string 	`json:"city"`
+	Birthday 	 *string 	`json:"birthday"`
 }
 
 func (i UpdateProfile) Validate() error {
-	if i.Name == nil && i.Surname == nil && i.Photo == nil && i.Telegram == nil && i.City == nil{
+	if i.Name == nil && i.Surname == nil && i.Photo == nil && i.Telegram == nil && i.City == nil && i.Birthday == nil && i.Country == nil{
 		return errors.New("update structure has no values")
 	}
 

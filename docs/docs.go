@@ -1065,24 +1065,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/chat.UserHobbyInput"
                         }
-                    },
-                    {
-                        "description": "list info",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/chat.UserHobbyInput"
-                        }
-                    },
-                    {
-                        "description": "list info",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/chat.UserHobbyInput"
-                        }
                     }
                 ],
                 "responses": {
@@ -1557,18 +1539,20 @@ const docTemplate = `{
         "chat.Profile": {
             "type": "object",
             "required": [
-                "city",
                 "name",
                 "photo",
                 "surname",
                 "telegram"
             ],
             "properties": {
+                "birthday": {
+                    "type": "string"
+                },
                 "city": {
                     "type": "string"
                 },
-                "findstatus": {
-                    "type": "boolean"
+                "country": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
@@ -1624,7 +1608,13 @@ const docTemplate = `{
         "chat.UpdateProfile": {
             "type": "object",
             "properties": {
+                "birthday": {
+                    "type": "string"
+                },
                 "city": {
+                    "type": "string"
+                },
+                "country": {
                     "type": "string"
                 },
                 "name": {

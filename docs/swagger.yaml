@@ -40,10 +40,12 @@ definitions:
     type: object
   chat.Profile:
     properties:
+      birthday:
+        type: string
       city:
         type: string
-      findstatus:
-        type: boolean
+      country:
+        type: string
       id:
         type: integer
       name:
@@ -55,7 +57,6 @@ definitions:
       telegram:
         type: string
     required:
-    - city
     - name
     - photo
     - surname
@@ -85,7 +86,11 @@ definitions:
     type: object
   chat.UpdateProfile:
     properties:
+      birthday:
+        type: string
       city:
+        type: string
+      country:
         type: string
       name:
         type: string
@@ -677,18 +682,6 @@ paths:
         name: prof_id
         required: true
         type: integer
-      - description: list info
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/chat.UserHobbyInput'
-      - description: list info
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/chat.UserHobbyInput'
       - description: list info
         in: body
         name: input
