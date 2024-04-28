@@ -92,3 +92,41 @@ func (r *ChatListPostgres) Update(userId, listId int, input chat.UpdateListInput
 	_, err := r.db.Exec(query, args...)
 	return err
 }
+
+func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) (int, error) {
+	var id int
+
+	tx, err := r.db.Begin()
+	if err != nil {
+		return id, err
+	}
+
+	createListQuery := fmt.Sprintf("INSERT INTO %s (user_id, start_day, end_day, start_time, end_time) VALUES ($1, $2, $3, $4, $5)", findUsersTable)
+	_, err = tx.Exec(createListQuery, userId, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
+	if err != nil {
+		tx.Rollback()
+		return id, err
+	}
+
+	tx.Commit()
+
+	query := fmt.Sprintf(`SELECT tl.user_id FROM %s tl WHERE
+	((tl.start_day BETWEEN $1 AND $2) OR (tl.end_day BETWEEN $1 AND $2)) AND 
+	((tl.start_time BETWEEN $3 AND $4) OR (tl.end_time BETWEEN $3 AND $4)) AND tl.user_id!=$5`,
+		findUsersTable)
+	err = r.db.Get(&id, query, input.StartDay, input.EndDay, input.StartTime, input.EndTime, userId)
+
+	return id, err
+}
+
+func (r *ChatListPostgres) FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error) {
+	var lists []chat.UserHobby
+
+	query := fmt.Sprintf(`SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id
+	WHERE ul.user_id=$1 INTERSECT SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id
+	WHERE ul.user_id=$2`,
+	userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable)
+	err := r.db.Select(&lists, query, userId1, userId2)
+
+	return lists, err
+}

@@ -55,6 +55,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			chats.POST("/create_chat", h.createList)
 			chats.GET("/get_all_chats", h.getAllLists)
+			chats.POST("/find_chats_users", h.findUsersByTime)
+			chats.POST("/find_chats_users_by_hobby", h.findUsersByHobby)
 			chats.GET("/get_chat/:chat_id", h.getListById)
 			chats.PUT("/update_chat/:chat_id", h.updateList)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
