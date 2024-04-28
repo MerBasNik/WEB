@@ -8,6 +8,88 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Find Users for chat
+// @Security ApiKeyAuth
+// @Tags find
+// @Description find users for chat
+// @ID find-user-by-time
+// @Accept  json
+// @Produce  json
+// @Param input body chat.FindUserInput true "list info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/chats/find_chats_users [post]
+func (h *Handler) findUsersByTime(c *gin.Context)  {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var input chat.FindUserInput
+	if err := c.BindJSON(&input); err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	list_id, err := h.services.ChatList.FindByTime(userId, input)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"finded user_id for chat": list_id,
+	})
+}
+
+
+
+// @Summary Find Users by hobby for chat
+// @Security ApiKeyAuth
+// @Tags find
+// @Description find users by hobby for chat
+// @ID find-user-by-hobby
+// @Accept  json
+// @Produce  json
+// @Param input body chat.FindUserInput true "list info"
+// @Success 200 {integer} getAllListsResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/chats/find_chats_users_by_hobby [post]
+func (h *Handler) findUsersByHobby(c *gin.Context)  {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	var input chat.FindUserInput
+	if err := c.BindJSON(&input); err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	list_id, err := h.services.ChatList.FindByTime(userId, input)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	lists, err := h.services.ChatList.FindByHobby(userId, list_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, getAllHobbyResponse{
+		Data: lists,
+	})
+}
+
 // @Summary Create chat
 // @Security ApiKeyAuth
 // @Tags chats

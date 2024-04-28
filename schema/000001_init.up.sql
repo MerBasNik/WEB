@@ -12,9 +12,10 @@ CREATE TABLE users_profile
     name                varchar(255) not null,
     surname             varchar(255) not null,
     photo               varchar(255) not null,
-    city	            varchar(255) not null,
+    country             varchar(255),
+    city	            varchar(255),
     telegram	        varchar(255) not null,
-    findstatus          boolean      not null default false
+    birthday            date         default NOW()
 );
 
 CREATE TABLE chat_lists
@@ -25,6 +26,17 @@ CREATE TABLE chat_lists
     -- listchat references chat_items on delete cascade not null 
     -- description varchar(255)
 );
+
+CREATE TABLE find_users
+(
+    id          serial PRIMARY KEY,
+    user_id     int references users (id) on delete cascade not null,
+    start_day   date   not null,
+    end_day     date   not null,
+    start_time  time   not null,
+    end_time    time   not null
+);
+
 
 CREATE TABLE users_hobby
 (

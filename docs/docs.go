@@ -141,6 +141,134 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/chats/find_chats_users": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "find users for chat",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "find"
+                ],
+                "summary": "Find Users for chat",
+                "operationId": "find-user-by-time",
+                "parameters": [
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.FindUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/chats/find_chats_users_by_hobby": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "find users by hobby for chat",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "find"
+                ],
+                "summary": "Find Users by hobby for chat",
+                "operationId": "find-user-by-hobby",
+                "parameters": [
+                    {
+                        "description": "list info",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/chat.FindUserInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/chats/get_all_chats": {
             "get": {
                 "security": [
@@ -935,7 +1063,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/chat.UserHobby"
+                            "$ref": "#/definitions/chat.UserHobbyInput"
                         }
                     }
                 ],
@@ -1380,6 +1508,23 @@ const docTemplate = `{
                 }
             }
         },
+        "chat.FindUserInput": {
+            "type": "object",
+            "properties": {
+                "endday": {
+                    "type": "string"
+                },
+                "endtime": {
+                    "type": "string"
+                },
+                "startday": {
+                    "type": "string"
+                },
+                "starttime": {
+                    "type": "string"
+                }
+            }
+        },
         "chat.ForgotPasswordInput": {
             "type": "object",
             "required": [
@@ -1394,18 +1539,20 @@ const docTemplate = `{
         "chat.Profile": {
             "type": "object",
             "required": [
-                "city",
                 "name",
                 "photo",
                 "surname",
                 "telegram"
             ],
             "properties": {
+                "birthday": {
+                    "type": "string"
+                },
                 "city": {
                     "type": "string"
                 },
-                "findstatus": {
-                    "type": "boolean"
+                "country": {
+                    "type": "string"
                 },
                 "id": {
                     "type": "integer"
@@ -1461,7 +1608,13 @@ const docTemplate = `{
         "chat.UpdateProfile": {
             "type": "object",
             "properties": {
+                "birthday": {
+                    "type": "string"
+                },
                 "city": {
+                    "type": "string"
+                },
+                "country": {
                     "type": "string"
                 },
                 "name": {
@@ -1489,6 +1642,17 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
+                }
+            }
+        },
+        "chat.UserHobbyInput": {
+            "type": "object",
+            "required": [
+                "description"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
                 }
             }
         },
