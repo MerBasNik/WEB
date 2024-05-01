@@ -27,7 +27,7 @@ type FindUserInput struct {
 }
 
 type ItemLists struct {
-	Id     int
+	Id     	   int
 	ChatListId int
 	ChatItemId int
 }
@@ -45,8 +45,8 @@ func (i UpdateListInput) Validate() error {
 }
 
 type UpdateItemInput struct {
-	Title       *string `json:"title"`
-	Description *string `json:"description"`
+	Title       *string `json:"title" db:"title"`
+	Description *string `json:"description" db:"description"`
 }
 
 func (i UpdateItemInput) Validate() error {
@@ -55,4 +55,13 @@ func (i UpdateItemInput) Validate() error {
 	}
 
 	return nil
+}
+
+type UsersForChat struct {
+	FirstUserId int `json:"first_user_id"`
+	SecondUserId int `json:"second_user_id"`
+}
+
+type UpdateChat struct {
+	ChatName *string `json:"chat_name" db:"chatName"`
 }
