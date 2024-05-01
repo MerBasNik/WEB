@@ -205,6 +205,32 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 	})
 }
 
+
+// @Summary Init All Hobby
+// @Security ApiKeyAuth
+// @Tags hobby
+// @Description init all hobby
+// @ID init-all-hobby
+// @Accept  json
+// @Produce  json
+// @Success 200 {integer} statusResponse
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/profile/init_all_hobby [post]
+func (h *Handler) initAllHobby(c *gin.Context) {
+	err := h.services.Profile.InitAllHobbies()
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, statusResponse{
+		Status: "ok",
+	})
+}
+
+
 // @Summary Create hobby
 // @Security ApiKeyAuth
 // @Tags hobby
@@ -213,7 +239,7 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param   prof_id path int true "Prof Id"
-// @Param   input body chat.UserHobbyInput true "list info"
+// @Param   input body map[string]chat.UserHobbyInput true "list info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
@@ -226,16 +252,17 @@ func (h *Handler) createHobby(c *gin.Context) {
 		return
 	}
 
-	var input map[string][]chat.UserHobbyInput
+	var input map[string]chat.UserHobbyInput
 	if err := c.BindJSON(&input); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+	fmt.Println(input)
 
 	hobby_id, err := h.services.Profile.CreateHobby(profId, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
+		return 
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{

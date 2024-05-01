@@ -14,6 +14,10 @@ func NewChatItemService(repo repository.ChatItem, listRepo repository.ChatList) 
 	return &ChatItemService{repo: repo, listRepo: listRepo}
 }
 
+func (s *ChatItemService) GetUsers(userId, listId int) ([]int, error) {
+	return s.repo.GetUsers(userId, listId)
+}
+
 func (s *ChatItemService) Create(userId, listId int, item chat.ChatItem) (int, error) {
 	_, err := s.listRepo.GetById(userId, listId)
 	if err != nil {

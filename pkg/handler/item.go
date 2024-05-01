@@ -9,6 +9,44 @@ import (
 )
 
 
+// @Summary Get Chat Users
+// @Security ApiKeyAuth
+// @Tags chats items
+// @Description Get Chat Users 
+// @ID get-chat-users
+// @Accept  json
+// @Produce  json
+// @Param   chat_id path int true "Chat Id"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/chats/{chat_id}/items/get_users [get]
+func (h *Handler) getUsers(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	chat_id, err := strconv.Atoi(c.Param("chat_id"))
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid list id param")
+		return
+	}
+
+	users_id, err := h.services.ChatItem.GetUsers(userId, chat_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"users id": users_id,
+	})
+}
+
+
 // @Summary Create Chat Item
 // @Security ApiKeyAuth
 // @Tags chats items
@@ -107,7 +145,7 @@ func (h *Handler) getAllItems(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items/get_item/{item_id} [get]
+// @Router /api/chats/{chat_id}/items/get_item/{item_id} [get]
 func (h *Handler) getItemById(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -144,7 +182,7 @@ func (h *Handler) getItemById(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items/update_item/{item_id} [put]
+// @Router /api/chats/{chat_id}/items/update_item/{item_id} [put]
 func (h *Handler) updateItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -185,7 +223,7 @@ func (h *Handler) updateItem(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/items/delete_item/{item_id} [delete]
+// @Router /api/chats/{chat_id}/items/delete_item/{item_id} [delete]
 func (h *Handler) deleteItem(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {

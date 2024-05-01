@@ -16,7 +16,17 @@ func NewChatItemPostgres(db *sqlx.DB) *ChatItemPostgres {
 	return &ChatItemPostgres{db: db}
 }
 
-func (r *ChatItemPostgres) Create(listId int, item chat.ChatItem) (int, error) {
+func (r *ChatItemPostgres) GetUsers(userId, chatId int) ([]int, error) {
+	var usersID []int
+	query := fmt.Sprintf("SELECT tl.user_id FROM %s tl WHERE tl.chatlists_id = $1", usersChatListsTable)
+	if err := r.db.Select(&usersID, query, chatId); err != nil {
+		return usersID, err
+	}
+
+	return usersID, nil
+}
+
+func (r *ChatItemPostgres) Create(chatId int, item chat.ChatItem) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -33,7 +43,7 @@ func (r *ChatItemPostgres) Create(listId int, item chat.ChatItem) (int, error) {
 	}
 
 	createListItemsQuery := fmt.Sprintf("INSERT INTO %s (chatlists_id, chatitems_id) values ($1, $2)", itemsListsTable)
-	_, err = tx.Exec(createListItemsQuery, listId, itemId)
+	_, err = tx.Exec(createListItemsQuery, chatId, itemId)
 	if err != nil {
 		tx.Rollback()
 		return 0, err

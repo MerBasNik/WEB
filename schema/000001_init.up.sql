@@ -55,14 +55,15 @@ CREATE TABLE users_hobby_lists
 (
     id           serial                                              PRIMARY KEY,
     user_id      int references users (id)         on delete cascade not null,
-    userhobby_id int references users_hobby (id)    on delete cascade not null
+    userhobby_id int references users_hobby (id)   on delete cascade not null
 );
 
 CREATE TABLE users_chat_lists
 (
-    id           serial                                              PRIMARY KEY,
+    id           serial                            PRIMARY KEY,
     user_id      int references users (id)         on delete cascade not null,
-    chatlists_id int references chat_lists (id)    on delete cascade not null
+    chatlists_id int references chat_lists (id)    on delete cascade not null,
+    chatName     varchar(255)                      not null
 );
 
 CREATE TABLE chat_items
@@ -70,7 +71,6 @@ CREATE TABLE chat_items
     id          serial       PRIMARY KEY,
     title       varchar(255) not null,
     description varchar(255)
-    -- done        boolean      not null default false
 );
 
 CREATE TABLE items_lists

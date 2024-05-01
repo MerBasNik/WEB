@@ -13,8 +13,12 @@ func NewChatListService(repo repository.ChatList) *ChatListService {
 	return &ChatListService{repo: repo}
 }
 
-func (s *ChatListService) Create(userId int, list chat.ChatList) (int, error) {
-	return s.repo.Create(userId, list)
+func (s *ChatListService) Create(userId chat.UsersForChat) (int, error) {
+	return s.repo.Create(userId)
+}
+
+func (s *ChatListService) RenameChat(userId, chatId int, chat chat.UpdateChat) error {
+	return s.repo.RenameChat(userId, chatId, chat)
 }
 
 func (s *ChatListService) GetAll(userId int) ([]chat.ChatList, error) {
@@ -27,6 +31,10 @@ func (s *ChatListService) GetById(userId, listId int) (chat.ChatList, error) {
 
 func (s *ChatListService) Delete(userId, listId int) error {
 	return s.repo.Delete(userId, listId)
+}
+
+func (s *ChatListService) DeleteFindUsers(userId chat.UsersForChat) error {
+	return s.repo.DeleteFindUsers(userId)
 }
 
 func (s *ChatListService) Update(userId, listId int, input chat.UpdateListInput) error {
