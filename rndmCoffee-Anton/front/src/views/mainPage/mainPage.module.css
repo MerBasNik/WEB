@@ -1,0 +1,31 @@
+.mainPage {
+	display: flex;
+	flex-direction: column;
+}
+
+.mainPage__header {
+	width: 100%;
+	display: flex;
+	padding: 1% 0 1% 2%;
+	box-sizing: border-box;
+	border-bottom: 1px solid black;
+}
+
+.header__buttons {
+	width: 20%;
+	display: flex;
+	justify-content: space-evenly;
+	box-sizing: border-box;
+}
+
+.header__buttonHome {
+	width: 40%;
+}
+
+.header__buttonProfile {
+	width: 40%;
+}
+
+.mainContent {
+	display: flex;
+}
