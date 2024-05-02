@@ -1,0 +1,32 @@
+.leftPanel {
+	display: grid;
+	position: absolute;
+	width: 5%;
+	min-height: 100vh;
+	background-color: #ffffff;
+	justify-content: center;
+	box-sizing: border-box;
+}
+
+.leftPanel__profileIcon {
+	box-sizing: border-box;
+	margin-top: 30%;
+	display: flex;
+	justify-self: flex-start;
+}
+
+.leftPanel__pagesIcon {
+	display: flex;
+	justify-content: flex-start;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.rightPanel {
+	display: flex;
+	margin-left: auto;
+	width: 95%;
+	min-height: 100vh;
+	background-color: #9e9e9e;
+	flex-direction: column;
+}
