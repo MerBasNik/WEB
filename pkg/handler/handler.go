@@ -19,7 +19,7 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
+func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 	router := gin.New()
 
 	router.Use(CORSMiddleware())
@@ -73,6 +73,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				items.PUT("/update_item/:item_id", h.updateItem)
 				items.DELETE("/delete_item/:item_id", h.deleteItem)
 			}
+		}
+
+		webSocketApi := api.Group("/ws")
+		{
+			webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
+			webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
+				//wsHandler.JoinRoom()
+			})
 		}
 	}
 

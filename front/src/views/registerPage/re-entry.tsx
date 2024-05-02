@@ -1,8 +1,21 @@
 import React, { useState } from "react";
 import stylesRegister from "./register.module.css";
 import stylesReEntry from "./re-entry.module.css";
-import { InputField } from "./register";
 import { Navigate, useNavigate } from "react-router-dom";
+import {
+	Button,
+	ButtonTextLink,
+	ButtonType,
+	LocationOnPages,
+} from "../../components/button/button";
+import {
+	LocationInputField,
+	TextField,
+	TypeInputOnProfile,
+} from "../../components/input/input";
+import { BackgroundIcon } from "../../components/icons/icons";
+import { TypePredicateKind } from "typescript";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 export const ReEntryScreen = () => {
 	const [InputNameEmail, setInputEmail] = useState("");
@@ -14,23 +27,18 @@ export const ReEntryScreen = () => {
 			" " +
 			stylesRegister.register__window__error,
 	);
+
+	const [token, setToken] = useLocalStorage({
+		initialValue: {},
+		key: "token",
+	});
+
 	const navigate = useNavigate();
 
 	return (
 		<div>
-			<div className={stylesRegister.firstHalf}></div>
+			<div className={stylesRegister.firstHalf}>{<BackgroundIcon />}</div>
 			<div className={stylesRegister.register}>
-				<div className={ClassesError}>
-					<div className={stylesRegister.wrapper__header__error}>
-						<h1
-							className={
-								stylesRegister.register__window__error__header
-							}
-						>
-							Такого пользователя не существует
-						</h1>
-					</div>
-				</div>
 				<div className={stylesRegister.register__window}>
 					<div className={stylesRegister.window__header}>
 						<h1 className={stylesRegister.register__header}>
@@ -75,34 +83,51 @@ export const ReEntryScreen = () => {
 								}
 								return;
 							}
-							navigate("/main", { replace: true });
+							const dataFromResponse = await response.json();
+
+							setToken(dataFromResponse.token);
+
+							setTimeout(() => {
+								navigate("/main/home", {
+									replace: true,
+								});
+							}, 1);
 						}}
 						action="http:://localhost:8000/auth/sign-in"
 						method="post"
 					>
-						<div>
-							<InputField
-								InputData={InputNameEmail}
-								setInput={setInputEmail}
-								title={"Email"}
-								type={"email"}
-								autoComplete={true}
-								id={"email"}
-								error={InputErrorEmail}
-								setErrorInput={setInputErrorEmail}
-								setErrorData={setClassesError}
-							/>
-							<InputField
-								InputData={InputNamePassword}
-								setInput={setInputPassword}
-								title={"Пароль"}
-								type={"password"}
-								autoComplete={true}
-								id={"password"}
-								error={InputErrorPassword}
-								setErrorInput={setInputErrorPassword}
-								setErrorData={setClassesError}
-							/>
+						<div className={stylesRegister.wrapper__inputs}>
+							<div className={stylesRegister.wrapper_input}>
+								<TextField
+									inputData={InputNameEmail}
+									setInput={setInputEmail}
+									textLabel={"Email"}
+									typeInput={"email"}
+									id={"username"}
+									error={InputErrorEmail}
+									setErrorInput={setInputErrorEmail}
+									location={LocationInputField.Authorization}
+									typeInputOnProfile={
+										TypeInputOnProfile.Double
+									}
+								/>
+							</div>
+							<div className={stylesRegister.wrapper_input}>
+								<TextField
+									inputData={InputNamePassword}
+									setInput={setInputPassword}
+									textLabel={"Пароль"}
+									helpText={"Забыли пароль?"}
+									typeInput={"password"}
+									id={"password"}
+									error={InputErrorPassword}
+									setErrorInput={setInputErrorPassword}
+									location={LocationInputField.Authorization}
+									typeInputOnProfile={
+										TypeInputOnProfile.Double
+									}
+								/>
+							</div>
 						</div>
 						<div
 							className={stylesReEntry.wrapper__user__assistance}
@@ -126,26 +151,37 @@ export const ReEntryScreen = () => {
 									Запомнить вход
 								</label>
 							</div>
-							<div
-								className={
-									stylesReEntry.wrapper__forgot__password
-								}
-							>
-								<a
-									className={stylesReEntry.forgot__password}
-									href={"#"}
-								>
-									Забыли пароль?
-								</a>
-							</div>
 						</div>
 						<div className={stylesRegister.wrapper__input__submit}>
-							<button
-								type={"submit"}
-								className={stylesRegister.input__submit}
+							<Button
+								id={"entry"}
+								title={"Вход"}
+								type={ButtonType.Text}
+								typeButton={"submit"}
+							/>
+						</div>
+						<div className={stylesReEntry.wrapper__create__account}>
+							<div>
+								<h2
+									className={
+										stylesRegister.inputField__header
+									}
+								>
+									Еще не с нами?
+								</h2>
+							</div>
+							<div
+								className={
+									stylesRegister.wrapper__buttonTextLink
+								}
 							>
-								Вход
-							</button>
+								<ButtonTextLink
+									location={LocationOnPages.Authorization}
+									id={"reg"}
+									title={"Регистрация"}
+									link={"/reg"}
+								/>
+							</div>
 						</div>
 					</form>
 				</div>

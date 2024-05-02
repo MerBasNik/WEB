@@ -69,13 +69,14 @@ CREATE TABLE users_chat_lists
 CREATE TABLE chat_items
 (
     id          serial       PRIMARY KEY,
-    title       varchar(255) not null,
+    username    varchar(255) not null,
     description varchar(255)
+    chatlist_id int references chat_lists (id) on delete cascade not null
 );
 
-CREATE TABLE items_lists
-(
-    id           serial                                           PRIMARY KEY,
-    chatitems_id int references chat_items (id) on delete cascade not null,
-    chatlists_id int references chat_lists (id) on delete cascade not null
-);
+-- CREATE TABLE items_lists
+-- (
+--     id           serial                                           PRIMARY KEY,
+--     chatitems_id int references chat_items (id) on delete cascade not null,
+--     chatlists_id int references chat_lists (id) on delete cascade not null
+-- );
