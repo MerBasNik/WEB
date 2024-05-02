@@ -1,0 +1,43 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: Inter, sans-serif;
+	font-weight: lighter;
+}
+
+:root {
+	--main-font-family: inter, sans-serif;
+	--main-font-weight: 450px;
+
+	--homePage-header-font-weight: bold;
+	--homePage-header-button-font-weight: 550px;
+	--homePage-header-button-font-size: 2.188rem;
+	--homePage-header-font-size: 3.75rem;
+
+	--register-fontSize: 2.25rem;
+	--inputField-fonstSize-Auth: 1.125rem;
+	--label-fontSize-Auth: 1.125rem;
+
+	--inputField-fonstSize-Prof: 0.938rem;
+	--label-fontSize-Prof: 0.938rem;
+
+	--error-fontSize: 1.4rem;
+
+	--additionalText-fontSize: 0.75rem;
+
+	--header-welcome-fontSize: 2.344rem;
+	--text-welcome-fontSize: 1.125rem;
+
+	--text-userPath-fontSize: 0.75rem;
+
+	--header-contacts-fontSize: 2.25rem;
+
+	--header-choice-activity: 1.875rem;
+
+	--header-create-meeting-font-size: 2.5rem;
+	--header-create-meeting-font-weight: 550px;
+	--additionalText-create-meeting-font-size: 1.125rem;
+
+	--header-meet-card-font-size: 1.125rem;
+	--header-meet-card-font-weight: bold;
+}
