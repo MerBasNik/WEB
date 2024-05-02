@@ -62,7 +62,6 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 			chats.PUT("/update_chat/:chat_id", h.updateList)
 			chats.PUT("/rename_chat/:chat_id", h.renameChat)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
-			chats.DELETE("/delete_find_users", h.deleteFindUsers)
 
 			items := chats.Group(":chat_id/items")
 			{
