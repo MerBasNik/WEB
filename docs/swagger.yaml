@@ -827,7 +827,9 @@ paths:
         required: true
         schema:
           additionalProperties:
-            $ref: '#/definitions/chat.UserHobbyInput'
+            items:
+              $ref: '#/definitions/chat.UserHobbyInput'
+            type: array
           type: object
       produces:
       - application/json

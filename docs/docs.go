@@ -1315,7 +1315,10 @@ const docTemplate = `{
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
-                                "$ref": "#/definitions/chat.UserHobbyInput"
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/chat.UserHobbyInput"
+                                }
                             }
                         }
                     }

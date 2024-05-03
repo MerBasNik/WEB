@@ -171,7 +171,7 @@ func (r *ProfilePostgres) InitAllHobbies() error {
 }
 
 
-func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string]chat.UserHobbyInput) ([]int, error) {
+func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
 	var list_id []int
 	var id int
 
@@ -183,7 +183,8 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string]chat.UserHo
 	createListQuery := fmt.Sprintf("SELECT tl.id FROM %s tl WHERE tl.description=$1", userHobbyTable)
 	list_hobbies := make([]string, 0, len(hobbies))
  	for _, value := range hobbies {
-    	list_hobbies = append(list_hobbies, string(value.Description))
+		list_hobbies = append(list_hobbies, value[0].Description)
+
   	}
 	fmt.Println(list_hobbies)
 	var lengthOfHobbies = len(list_hobbies)
