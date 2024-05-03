@@ -78,7 +78,7 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 		{
 			webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
 			webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
-				//wsHandler.JoinRoom()
+				//wsHandler.JoinRoom(h.services.CreateItem())
 			})
 		}
 	}
