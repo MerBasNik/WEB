@@ -119,6 +119,12 @@ func (h *Handler) createList(c *gin.Context) {
 		return
 	}
 
+	err = h.services.ChatList.DeleteFindUsers(list_users_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"chat_id": chat_id,
 	})
@@ -308,37 +314,6 @@ func (h *Handler) deleteList(c *gin.Context) {
 	}
 
 	err = h.services.ChatList.Delete(userId, chat_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, statusResponse{
-		Status: "ok",
-	})
-}
-
-// @Summary Delete Find Users
-// @Security ApiKeyAuth
-// @Tags find
-// @Description delete find users
-// @ID delete-find-users
-// @Accept  json
-// @Produce  json
-// @Param list_users_id body chat.UsersForChat true "Chat Users Id"
-// @Success 200 {object} statusResponse
-// @Failure 400,404 {object} errorResponse
-// @Failure 500 {object} errorResponse
-// @Failure default {object} errorResponse
-// @Router /api/chats/delete_find_users [delete]
-func (h *Handler) deleteFindUsers(c *gin.Context) {
-	var list_users_id chat.UsersForChat
-	if err := c.BindJSON(&list_users_id); err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, err.Error())
-		return
-	}
-
-	err := h.services.ChatList.DeleteFindUsers(list_users_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

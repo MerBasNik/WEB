@@ -3,6 +3,7 @@
 	justify-content: space-between;
 	box-sizing: border-box;
 	width: 100%;
+	margin-top: 3%;
 }
 
 .wrapper__remember__entry__input {
@@ -11,12 +12,12 @@
 
 .remember__entry__input {
 	border-radius: 4px;
+	margin-right: 8%;
 	background-color: #d9d9d9;
 	cursor: pointer;
 }
 
 .label__remember__entry__input {
-	margin-left: 2%;
 	white-space: nowrap;
 	font-family: var(--main-font-family);
 	font-weight: var(--main-font-weight);
@@ -47,4 +48,9 @@
 
 .forgot__password:active {
 	color: #e70000;
+}
+
+.wrapper__create__account {
+	width: 100%;
+	margin-top: 8%;
 }

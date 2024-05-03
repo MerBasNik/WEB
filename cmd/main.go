@@ -54,9 +54,15 @@ func main() {
 	services := service.NewService(repos)
 	handlers := handler.NewHandler(services)
 
+	repos.InitAllHobbies()
+
+	hub := service.NewHub()
+	wsHandler := service.NewHandlerWS(hub)
+	go hub.Run()
+
 	srv := new(chat.Server)
 	go func() {
-		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes()); err != nil {
+		if err := srv.Run(viper.GetString("port"), handlers.InitRoutes(wsHandler)); err != nil {
 			logrus.Fatalf("error occured while running http server: %s", err.Error())
 		}
 	}()

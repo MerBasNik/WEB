@@ -19,7 +19,7 @@ func NewHandler(services *service.Service) *Handler {
 	return &Handler{services: services}
 }
 
-func (h *Handler) InitRoutes() *gin.Engine {
+func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 	router := gin.New()
 
 	router.Use(CORSMiddleware())
@@ -40,7 +40,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			profile.POST("/create_profile", h.createProfile)
 			profile.PUT("/edit_profile/:prof_id", h.editProfile)
-			profile.POST("/init_all_hobby", h.initAllHobby)
 			profile.GET("/get_profile/:prof_id", h.getProfile)
 			profile.PUT("/upload_avatar", h.uploadAvatar)
 
@@ -62,7 +61,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			chats.PUT("/update_chat/:chat_id", h.updateList)
 			chats.PUT("/rename_chat/:chat_id", h.renameChat)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
-			chats.DELETE("/delete_find_users", h.deleteFindUsers)
 
 			items := chats.Group(":chat_id/items")
 			{
@@ -73,6 +71,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				items.PUT("/update_item/:item_id", h.updateItem)
 				items.DELETE("/delete_item/:item_id", h.deleteItem)
 			}
+		}
+
+		webSocketApi := api.Group("/ws")
+		{
+			webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
+			webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
+				//wsHandler.JoinRoom(h.services.CreateItem())
+			})
 		}
 	}
 
