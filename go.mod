@@ -4,6 +4,8 @@ go 1.22
 
 require github.com/lib/pq v1.10.9
 
+require github.com/gorilla/websocket v1.5.1 // indirect
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.2.1 // indirect

@@ -22,7 +22,7 @@
 	height: 8.95rem;
 	display: flex;
 	flex-direction: row;
-	margin: 0 4% 0 4%;
+	margin: 0 4%;
 }
 
 .border__bottom__level {
@@ -41,7 +41,7 @@
 	width: 6.375rem;
 	height: 6.375rem;
 	border-radius: 100%;
-	background-color: #ffffff;
+	background-color: #fff;
 	border: none;
 	cursor: pointer;
 }
@@ -85,8 +85,5 @@
 
 .resize__input {
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
+	inset: 0;
 }

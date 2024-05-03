@@ -1,0 +1,41 @@
+.wrapper__welcomeBlock {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+}
+
+.wrapper__appeal {
+	display: flex;
+	flex-direction: column;
+	padding: 0 5%;
+}
+
+.wrapper__welcomeHeader {
+	width: 100%;
+	text-align: left;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	padding: 0 10%;
+	box-sizing: border-box;
+}
+
+.welcomeHeader {
+	font-size: var(--header-welcome-fontSize);
+	font-family: var(--main-font-family);
+	font-weight: bold;
+}
+
+.wrapper__welcomeText {
+	width: 100%;
+	text-align: left;
+	padding: 0 10%;
+	box-sizing: border-box;
+}
+
+.welcomeText {
+	font-size: var(--text-welcome-fontSize);
+	font-family: var(--main-font-family);
+	font-weight: normal;
+	margin-bottom: 4%;
+}
