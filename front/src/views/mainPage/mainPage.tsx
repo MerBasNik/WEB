@@ -1,41 +1,35 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import styles from "./mainPage.module.css";
-import { ButtonIconLink } from "../../components/button/button";
 import {
-	ChatsMainPageIcon,
-	CoffeeMainPageIcon,
-	ProfileImageIcon,
-	ProfileMainPageIcon,
-} from "../../components/icons/icons";
-import { Outlet, Route, Routes } from "react-router-dom";
-import { Profile } from "../profilePage/profile";
+	ButtonTextLink,
+	LocationOnPages,
+} from "../../components/button/button";
 
 export const MainPage = () => {
 	return (
-		<div>
-			<div className={styles.leftPanel}>
-				<div className={styles.leftPanel__profileIcon}>
-					<ProfileImageIcon />
+		<div className={styles.mainPage}>
+			<header className={styles.mainPage__header}>
+				<div className={styles.header__buttons}>
+					<div className={styles.header__buttonHome}>
+						<ButtonTextLink
+							location={LocationOnPages.HomePage}
+							id={"home"}
+							link={"/main/home"}
+							title={"Главная"}
+						/>
+					</div>
+					<div className={styles.header__buttonProfile}>
+						<ButtonTextLink
+							location={LocationOnPages.HomePage}
+							id={"profile"}
+							link={"/main/profile"}
+							title={"Профиль"}
+						/>
+					</div>
 				</div>
-				<div className={styles.leftPanel__pagesIcon}>
-					<ButtonIconLink
-						id="mainPage"
-						link={"/main"}
-						icon={<CoffeeMainPageIcon />}
-					/>
-					<ButtonIconLink
-						id="chats"
-						link={"/main/chats"}
-						icon={<ChatsMainPageIcon />}
-					/>
-					<ButtonIconLink
-						id="profile"
-						link={"/main/profile"}
-						icon={<ProfileMainPageIcon />}
-					/>
-				</div>
-			</div>
-			<div className={styles.rightPanel}>
+			</header>
+			<div className={styles.mainContent}>
 				<Outlet />
 			</div>
 		</div>

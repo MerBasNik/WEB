@@ -1,32 +1,31 @@
-.leftPanel {
-	display: grid;
-	position: absolute;
-	width: 5%;
-	min-height: 100vh;
-	background-color: #ffffff;
-	justify-content: center;
+.mainPage {
+	display: flex;
+	flex-direction: column;
+}
+
+.mainPage__header {
+	width: 100%;
+	display: flex;
+	padding: 1% 0 1% 2%;
+	box-sizing: border-box;
+	border-bottom: 1px solid black;
+}
+
+.header__buttons {
+	width: 20%;
+	display: flex;
+	justify-content: space-evenly;
 	box-sizing: border-box;
 }
 
-.leftPanel__profileIcon {
-	box-sizing: border-box;
-	margin-top: 30%;
-	display: flex;
-	justify-self: flex-start;
+.header__buttonHome {
+	width: 40%;
 }
 
-.leftPanel__pagesIcon {
-	display: flex;
-	justify-content: flex-start;
-	flex-direction: column;
-	gap: 10px;
+.header__buttonProfile {
+	width: 40%;
 }
 
-.rightPanel {
+.mainContent {
 	display: flex;
-	margin-left: auto;
-	width: 95%;
-	min-height: 100vh;
-	background-color: #9e9e9e;
-	flex-direction: column;
 }

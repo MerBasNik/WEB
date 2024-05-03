@@ -1,8 +1,6 @@
-import React from "react"
-import styles from './button.module.css'
-import stylesRegister from "../../views/registerPage/register.module.css"
-import { Link, NavLink } from "react-router-dom"
-import { useState } from 'react'
+import React from "react";
+import styles from "./button.module.css";
+import { Link } from "react-router-dom";
 
 export enum ButtonType {
 	Icon,
@@ -10,41 +8,82 @@ export enum ButtonType {
 }
 
 type ButtonProps = {
-	onClick: () => void;
+	onClick?: () => void;
 	title?: string;
 	id: string;
 	type: ButtonType;
+	typeButton?: "button" | "submit" | "reset";
 	icon?: JSX.Element | undefined;
-	link?: string;
 };
 
 export const Button = (props: ButtonProps) => {
-	const { onClick, id, icon, type, title, link } = props;
+	const { onClick, id, icon, type, title, typeButton } = props;
 	if (type == ButtonType.Icon) {
 		if (icon) {
+			if (onClick) {
+				return (
+					<div key={id} className={styles.buttonWrapper}>
+						<button
+							key={id}
+							onClick={(
+								eventt: React.MouseEvent<HTMLButtonElement>,
+							) => {
+								eventt.preventDefault();
+								onClick();
+							}}
+							className={styles.buttonIcon}
+						>
+							{icon}
+						</button>
+					</div>
+				);
+			} else {
+				return (
+					<div key={id} className={styles.buttonWrapper}>
+						<button key={id} className={styles.buttonIcon}>
+							{icon}
+						</button>
+					</div>
+				);
+			}
+		} else {
+			return <></>;
+		}
+	}
+	if (type == ButtonType.Text) {
+		if (onClick) {
 			return (
 				<div key={id} className={styles.buttonWrapper}>
 					<button
 						key={id}
-						onClick={onClick}
-						className={styles.buttonIcon}
+						onClick={(
+							eventt: React.MouseEvent<HTMLButtonElement>,
+						) => {
+							eventt.preventDefault();
+							onClick();
+						}}
+						className={styles.buttonText}
+						type={typeButton}
 					>
-						{icon}
+						{title}
+					</button>
+				</div>
+			);
+		} else {
+			return (
+				<div key={id} className={styles.buttonWrapper}>
+					<button
+						key={id}
+						className={styles.buttonText}
+						type={typeButton}
+					>
+						{title}
 					</button>
 				</div>
 			);
 		}
 	}
-	if (type == ButtonType.Text) {
-		return (
-			<div key={id} className={styles.buttonWrapper}>
-				<button key={id} onClick={onClick} className={styles.button}>
-					{title}
-				</button>
-			</div>
-		);
-	}
-	return <div />;
+	return <></>;
 };
 
 type ButtonIconLinkProps = {
@@ -64,17 +103,24 @@ export const ButtonIconLink = (props: ButtonIconLinkProps) => {
 	);
 };
 
+export enum LocationOnPages {
+	Authorization,
+	HomePage,
+}
+
 type ButtonTextLinkProps = {
 	id: string;
 	link: string;
 	title: string;
+	location: LocationOnPages;
 };
 
 export const ButtonTextLink = (props: ButtonTextLinkProps) => {
-	const { id, link, title } = props;
+	const { id, link, title, location } = props;
+
 	return (
 		<div key={id} className={styles.buttonWrapper}>
-			<Link key={id} to={link} className={stylesRegister.input__submit}>
+			<Link key={id} to={link} className={styles.buttonText}>
 				{title}
 			</Link>
 		</div>

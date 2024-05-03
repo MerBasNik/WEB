@@ -205,6 +205,7 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 	})
 }
 
+
 // @Summary Create hobby
 // @Security ApiKeyAuth
 // @Tags hobby
@@ -213,7 +214,7 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param   prof_id path int true "Prof Id"
-// @Param   input body chat.UserHobbyInput true "list info"
+// @Param   input body map[string][]chat.UserHobbyInput true "list info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
@@ -231,11 +232,12 @@ func (h *Handler) createHobby(c *gin.Context) {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+	fmt.Println(input)
 
 	hobby_id, err := h.services.Profile.CreateHobby(profId, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
+		return 
 	}
 
 	c.JSON(http.StatusOK, map[string]interface{}{

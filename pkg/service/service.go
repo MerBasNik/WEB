@@ -17,7 +17,7 @@ type Profile interface {
 	CreateProfile(userId int, profile chat.Profile) (int, error)
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
-
+	InitAllHobbies() error
 	CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error)
 	GetAllHobby(profId int) ([]chat.UserHobby, error)
 	DeleteHobby(profId, hobbyId int) error
@@ -25,16 +25,19 @@ type Profile interface {
 }
 
 type ChatList interface {
-	Create(userId int, list chat.ChatList) (int, error)
+	Create(userId chat.UsersForChat) (int, error)
+	RenameChat(userId, chatId int, chat chat.UpdateChat) error
 	GetAll(userId int) ([]chat.ChatList, error)
 	GetById(userId, listId int) (chat.ChatList, error)
 	Delete(userId, listId int) error
 	Update(userId, listId int, input chat.UpdateListInput) error
 	FindByTime(userId int, input chat.FindUserInput) (int, error)
 	FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error)
+	DeleteFindUsers(userId chat.UsersForChat) error
 }
 
 type ChatItem interface {
+	GetUsers(userId, listId int) ([]int, error)
 	Create(userId, listId int, item chat.ChatItem) (int, error)
 	GetAll(userId, listId int) ([]chat.ChatItem, error)
 	GetById(userId, itemId int) (chat.ChatItem, error)

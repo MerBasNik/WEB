@@ -1,0 +1,47 @@
+.wrapper__activity {
+	display: flex;
+	width: 85%;
+	flex-direction: column;
+	padding: 3% 2% 2%;
+	margin-left: 5%;
+	margin-bottom: 5%;
+	background-color: #fff;
+	border: 1px solid #dfdfdf;
+	border-radius: 20px;
+}
+
+.wrapper__Blockheader {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	box-sizing: border-box;
+}
+
+.wrapper__iconActivity {
+	padding-right: 1%;
+}
+
+.wrapper__Textheader {
+	text-align: center;
+	width: auto;
+	padding-right: 3%;
+}
+
+.header__text {
+	font-size: var(--header-choice-activity);
+	font-weight: bold;
+}
+
+.wrapper__activities {
+	width: 80%;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-evenly;
+	overflow-y: auto;
+}
+
+.wrapper__arrows {
+	width: 100%;
+	display: flex;
+	justify-content: end;
+}

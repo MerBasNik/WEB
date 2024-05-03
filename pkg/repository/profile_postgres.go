@@ -111,21 +111,64 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 	return err
 }
 
-// func (r *ProfilePostgres) UploadAvatar(profileId int, directory string) error {
-// 	tx, err := r.db.Begin()
-// 	if err != nil {
-// 		return err
-// 	}
 
-// 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s photo VALUES $1", usersProfileTable)
-// 	_, err = tx.Exec(createUsersListQuery, directory)
-// 	if err != nil {
-// 		tx.Rollback()
-// 		return err
-// 	}
-
-// 	return tx.Commit()
-// }
+func (r *ProfilePostgres) InitAllHobbies() error {
+	tx, err := r.db.Begin()
+	if err != nil {
+	 	return err
+	}
+	 
+	createListsHobbies := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1)", userHobbyTable)
+	
+	var hobbies []chat.UserHobbyInput
+	var hobby chat.UserHobbyInput
+	{
+	 	hobby.Description = "NFL"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "NBA"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Мировые новости"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "ChatGPT"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "One Piece"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Midjourney"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Cплетни о знаменитостях"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Call of Duty"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Baldur’s Gate 3"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Minecraft"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Playstation"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Genshin Impact"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "GTA"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Sims"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Terraria"
+	 	hobbies = append(hobbies, hobby)
+	 	hobby.Description = "Red Dead Redemption"
+	 	hobbies = append(hobbies, hobby)
+	}
+	
+	var lengthOfHobbies = len(hobbies)
+	for i := 0; i < lengthOfHobbies; i++ {
+	 	_, err = tx.Exec(createListsHobbies, hobbies[i].Description)
+	 	fmt.Print(hobbies[i])
+	 	if err != nil {
+	 	 	tx.Rollback()
+	 	 	return err
+	 	}
+	}
+	   
+	return tx.Commit()
+}
 
 
 func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
@@ -138,16 +181,22 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 	}
 
 	createListQuery := fmt.Sprintf("SELECT tl.id FROM %s tl WHERE tl.description=$1", userHobbyTable)
-	var desciptions = hobbies["description"]
-	var lengthOfHobbies = len(desciptions)
+	list_hobbies := make([]string, 0, len(hobbies))
+ 	for _, value := range hobbies {
+		list_hobbies = append(list_hobbies, value[0].Description)
+
+  	}
+	fmt.Println(list_hobbies)
+	var lengthOfHobbies = len(list_hobbies)
 	for i := 0; i < lengthOfHobbies; i++ {
-	  	row := tx.QueryRow(createListQuery, desciptions[i].Description)
-	 	if err := row.Scan(&id); err != nil {
+	 	if err := r.db.Get(&id, createListQuery, list_hobbies[i]); err != nil {
 			tx.Rollback()
 			return list_id, err
 	  	}
 	  	list_id = append(list_id, id)
 	}
+
+	fmt.Println(list_id)
   
 
 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)

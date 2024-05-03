@@ -1,10 +1,30 @@
 package chat
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/gorilla/websocket"
+)
+
+type Hub struct {
+	Chats      map[string]*ChatList
+	Register   chan *Client
+	Unregister chan *Client
+	Broadcast  chan *ChatItem
+}
 
 type ChatList struct {
-	UserId      int    `json:"id" db:"id"`
-	Title       string `json:"title" db:"title" binding:"required"`
+	Id      string             `json:"id" db:"id"`
+	UsersId map[string]*Client `json:"clients"`
+	Title   string             `json:"title" db:"title" binding:"required"`
+}
+
+type Client struct {
+	Conn     *websocket.Conn
+	Message  chan *ChatItem
+	Id       string `json:"id"`
+	RoomId   string `json:"roomId"`
+	Username string `json:"username"`
 }
 
 type UsersList struct {
@@ -15,7 +35,8 @@ type UsersList struct {
 
 type ChatItem struct {
 	Id          int    `json:"id" db:"id"`
-	Title       string `json:"title" db:"title" binding:"required"`
+	Chatlist_id string `json:"chatlist_id" db:"chatlist_id"`
+	Username    string `json:"username" db:"username" binding:"required"`
 	Description string `json:"description" db:"description"`
 }
 
@@ -27,7 +48,7 @@ type FindUserInput struct {
 }
 
 type ItemLists struct {
-	Id     int
+	Id     	   int
 	ChatListId int
 	ChatItemId int
 }
@@ -45,14 +66,22 @@ func (i UpdateListInput) Validate() error {
 }
 
 type UpdateItemInput struct {
-	Title       *string `json:"title"`
-	Description *string `json:"description"`
+	Description *string `json:"description" db:"description"`
 }
 
 func (i UpdateItemInput) Validate() error {
-	if i.Title == nil && i.Description == nil {
+	if i.Description == nil {
 		return errors.New("update structure has no values")
 	}
 
 	return nil
+}
+
+type UsersForChat struct {
+	FirstUserId int `json:"first_user_id"`
+	SecondUserId int `json:"second_user_id"`
+}
+
+type UpdateChat struct {
+	ChatName *string `json:"chat_name" db:"chatName"`
 }
