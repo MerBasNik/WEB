@@ -32,8 +32,9 @@ type ChatList interface {
 	GetById(userId, listId int) (chat.ChatList, error)
 	Delete(userId, listId int) error
 	Update(userId, listId int, input chat.UpdateListInput) error
-	FindByTime(userId int, input chat.FindUserInput) (int, error)
-	FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error)
+	FindByTime(userId int, input chat.FindUserInput) ([]int, error)
+	FindThreeByHobby(list_users []int) ([]chat.UserHobby, error)
+	FindTwoByHobby(list_users []int) ([]chat.UserHobby, error)
 	DeleteFindUsers(userId chat.UsersForChat) error
 }
 

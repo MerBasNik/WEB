@@ -232,7 +232,6 @@ func (h *Handler) createHobby(c *gin.Context) {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	fmt.Println(input)
 
 	hobby_id, err := h.services.Profile.CreateHobby(profId, input)
 	if err != nil {

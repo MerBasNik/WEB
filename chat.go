@@ -41,6 +41,7 @@ type ChatItem struct {
 }
 
 type FindUserInput struct {
+	Count		int  `json:"count" db:"count"`
 	StartDay 	string `json:"startday" db:"startday"`
 	EndDay 		string `json:"endday" db:"endday"`
 	StartTime 	string `json:"starttime" db:"starttime"`

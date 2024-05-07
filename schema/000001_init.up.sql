@@ -31,6 +31,7 @@ CREATE TABLE find_users
 (
     id          serial PRIMARY KEY,
     user_id     int references users (id) on delete cascade not null,
+    count       varchar(255)    not null,
     start_day   date   not null,
     end_day     date   not null,
     start_time  time   not null,
@@ -54,7 +55,7 @@ CREATE TABLE users_profile_lists
 CREATE TABLE users_hobby_lists
 (
     id           serial                                              PRIMARY KEY,
-    user_id      int references users (id)         on delete cascade not null,
+    prof_id      int references users_profile (id)         on delete cascade not null,
     userhobby_id int references users_hobby (id)   on delete cascade not null
 );
 
@@ -70,9 +71,10 @@ CREATE TABLE chat_items
 (
     id          serial       PRIMARY KEY,
     username    varchar(255) not null,
-    description varchar(255)
+    description varchar(255),
     chatlist_id int references chat_lists (id) on delete cascade not null
 );
+
 
 -- CREATE TABLE items_lists
 -- (

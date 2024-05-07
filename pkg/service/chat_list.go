@@ -45,10 +45,14 @@ func (s *ChatListService) Update(userId, listId int, input chat.UpdateListInput)
 	return s.repo.Update(userId, listId, input)
 }
 
-func (s *ChatListService) FindByTime(userId int, input chat.FindUserInput) (int, error) {
+func (s *ChatListService) FindByTime(userId int, input chat.FindUserInput) ([]int, error) {
 	return s.repo.FindByTime(userId, input)
 }
 
-func (s *ChatListService) FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error) {
-	return s.repo.FindByHobby(userId1, userId2)
+func (s *ChatListService) FindThreeByHobby(list_users []int) ([]chat.UserHobby, error) {
+	return s.repo.FindThreeByHobby(list_users)
+}
+
+func (s *ChatListService) FindTwoByHobby(list_users []int) ([]chat.UserHobby, error) {
+	return s.repo.FindTwoByHobby(list_users)
 }

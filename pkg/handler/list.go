@@ -40,14 +40,11 @@ func (h *Handler) findUsersByTime(c *gin.Context)  {
 		return
 	}
 
-	var mas_id []int
-	mas_id = append(mas_id, userId)
-	mas_id = append(mas_id, list_id)
+	list_id = append(list_id, userId)
 	c.JSON(http.StatusOK, map[string]interface{}{
-		"finded user_id for chat": mas_id,
+		"finded user_id for chat": 	list_id,
 	})
 }
-
 
 
 // @Summary Find Users by hobby for chat
@@ -82,17 +79,35 @@ func (h *Handler) findUsersByHobby(c *gin.Context)  {
 		return
 	}
 
-	lists, err := h.services.ChatList.FindByHobby(userId, list_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
+	list_id = append(list_id, userId)
+	var lists []chat.UserHobby
+	if (input.Count == 2) {
+		if (len(list_id) == 2) {
+			lists, err = h.services.ChatList.FindTwoByHobby(list_id)
+			if err != nil {
+				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+		}
+		c.JSON(http.StatusOK, getAllHobbyResponse{
+			Data: lists,
+		})
 	}
-
-	c.JSON(http.StatusOK, getAllHobbyResponse{
-		Data: lists,
-	})
+	if (input.Count == 3) {
+		if (len(list_id) == 3) {
+			lists, err = h.services.ChatList.FindThreeByHobby(list_id)
+			if err != nil {
+				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+				return
+			}
+		}
+		c.JSON(http.StatusOK, getAllHobbyResponse{
+			Data: lists,
+		})
+	}
 }
 
+	
 // @Summary Create Chat
 // @Security ApiKeyAuth
 // @Tags chats

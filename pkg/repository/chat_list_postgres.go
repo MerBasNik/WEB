@@ -150,15 +150,15 @@ func (r *ChatListPostgres) Update(userId, listId int, input chat.UpdateListInput
 	return err
 }
 
-func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) (int, error) {
-	var id int
+func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) ([]int, error) {
+	var id []int
 	tx, err := r.db.Begin()
 	if err != nil {
 		return id, err
 	}
 
-	createListQuery := fmt.Sprintf("INSERT INTO %s (user_id, start_day, end_day, start_time, end_time) VALUES ($1, $2, $3, $4, $5)", findUsersTable)
-	_, err = tx.Exec(createListQuery, userId, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
+	createListQuery := fmt.Sprintf("INSERT INTO %s (user_id, count, start_day, end_day, start_time, end_time) VALUES ($1, $2, $3, $4, $5, $6)", findUsersTable)
+	_, err = tx.Exec(createListQuery, userId, input.Count, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
 	if err != nil {
 		tx.Rollback()
 		return id, err
@@ -167,20 +167,55 @@ func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) (int
 
 	query := fmt.Sprintf(`SELECT tl.user_id FROM %s tl WHERE
 	(tl.start_day <= $1) AND ($2 <= tl.end_day) AND 
-	(tl.start_time <= $3) AND ($4 <= tl.end_time) AND tl.user_id!=$5`, findUsersTable)
-	err = r.db.Get(&id, query, input.EndDay, input.StartDay, input.EndTime, input.StartTime, userId)
+	(tl.start_time <= $3) AND ($4 <= tl.end_time) AND tl.user_id!=$5 AND tl.count=$6`, findUsersTable)
+	err = r.db.Select(&id, query, input.EndDay, input.StartDay, input.EndTime, input.StartTime, userId, input.Count)
 
 	return id, err
 }
 
-func (r *ChatListPostgres) FindByHobby(userId1, userId2 int) ([]chat.UserHobby, error) {
+func (r *ChatListPostgres) FindThreeByHobby(list_users []int) ([]chat.UserHobby, error) {
 	var lists []chat.UserHobby
+	var prof_id_list []int
+	var prof_id int
 
-	query := fmt.Sprintf(`SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id
-	WHERE ul.user_id=$1 INTERSECT SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id
-	WHERE ul.user_id=$2`,
+	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`,
+	usersProfileListsTable)
+	for i := 0; i < 3; i++ {
+		if err := r.db.Get(&prof_id, query, list_users[i]); err != nil {
+			return lists, err
+		}
+		prof_id_list = append(prof_id_list, prof_id)
+	}
+
+	query = fmt.Sprintf(`SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id 
+	WHERE ul.prof_id=$1 INTERSECT SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id 
+	WHERE ul.prof_id=$2 INTERSECT SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id 
+	WHERE ul.prof_id=$3`,
+	userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable)
+	err := r.db.Select(&lists, query, prof_id_list[0], prof_id_list[1], prof_id_list[2])
+
+	return lists, err
+}
+
+func (r *ChatListPostgres) FindTwoByHobby(list_users []int) ([]chat.UserHobby, error) {
+	var lists []chat.UserHobby
+	var prof_id_list []int
+	var prof_id int
+
+	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`,
+	usersProfileListsTable)
+	for i := 0; i < 2; i++ {
+		if err := r.db.Get(&prof_id, query, list_users[i]); err != nil {
+			return lists, err
+		}
+		prof_id_list = append(prof_id_list, prof_id)
+	}
+
+	query = fmt.Sprintf(`SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id 
+	WHERE ul.prof_id=$1 INTERSECT SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id 
+	WHERE ul.prof_id=$2`,
 	userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable)
-	err := r.db.Select(&lists, query, userId1, userId2)
+	err := r.db.Select(&lists, query, prof_id_list[0], prof_id_list[1])
 
 	return lists, err
 }

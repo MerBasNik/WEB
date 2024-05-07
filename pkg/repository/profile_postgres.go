@@ -186,7 +186,6 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 		list_hobbies = append(list_hobbies, value[0].Description)
 
   	}
-	fmt.Println(list_hobbies)
 	var lengthOfHobbies = len(list_hobbies)
 	for i := 0; i < lengthOfHobbies; i++ {
 	 	if err := r.db.Get(&id, createListQuery, list_hobbies[i]); err != nil {
@@ -195,11 +194,9 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 	  	}
 	  	list_id = append(list_id, id)
 	}
-
-	fmt.Println(list_id)
   
 
-	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (user_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
+	createUsersListQuery := fmt.Sprintf("INSERT INTO %s (prof_id, userhobby_id) VALUES ($1, $2)", usersHobbyListsTable)
 	for i := 0; i < lengthOfHobbies; i++ {
 		_, err = tx.Exec(createUsersListQuery, profId, list_id[i])
 		if err != nil {
@@ -215,7 +212,7 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 func (r *ProfilePostgres) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 	var hobbylist []chat.UserHobby
 
-	query := fmt.Sprintf("SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id WHERE ul.user_id = $1",
+	query := fmt.Sprintf("SELECT tl.id, tl.description FROM %s tl INNER JOIN %s ul on tl.id = ul.userhobby_id WHERE ul.prof_id = $1",
 		userHobbyTable, usersHobbyListsTable)
 	err := r.db.Select(&hobbylist, query, profId)
 
@@ -223,7 +220,7 @@ func (r *ProfilePostgres) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 }
 
 func (r *ProfilePostgres) DeleteHobby(profId, hobbyId int) error {
-	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.userhobby_id AND ul.user_id=$1 AND ul.userhobby_id=$2",
+	query := fmt.Sprintf("DELETE FROM %s tl USING %s ul WHERE tl.id = ul.userhobby_id AND ul.prof_id=$1 AND ul.userhobby_id=$2",
 		userHobbyTable, usersHobbyListsTable)
 	_, err := r.db.Exec(query, profId, hobbyId)
 
