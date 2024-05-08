@@ -4,6 +4,7 @@ import (
 	"fmt"
 	// "strings"
 
+	chat "github.com/MerBasNik/rndmCoffee"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -15,7 +16,7 @@ func NewChatItemPostgres(db *sqlx.DB) *ChatItemPostgres {
 	return &ChatItemPostgres{db: db}
 }
 
-func (r *ChatItemPostgres) CreateItem(username, description, chatlist_id string) (int, error) {
+func (r *ChatItemPostgres) CreateItem(input chat.ChatItem) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return 0, err
@@ -24,7 +25,7 @@ func (r *ChatItemPostgres) CreateItem(username, description, chatlist_id string)
 	var itemId int
 	createItemQuery := fmt.Sprintf("INSERT INTO %s (title, description) values ($1, $2) RETURNING id", chatItemsTable)
 
-	row := tx.QueryRow(createItemQuery, username, description, chatlist_id)
+	row := tx.QueryRow(createItemQuery, input.Username, input.Description)
 	err = row.Scan(&itemId)
 	if err != nil {
 		tx.Rollback()
