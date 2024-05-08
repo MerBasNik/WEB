@@ -19,6 +19,13 @@ type ChatList struct {
 	Title   string             `json:"title" db:"title" binding:"required"`
 }
 
+type ChatItem struct {
+	Id          int    `json:"id" db:"id"`
+	Chatlist_id string `json:"chatlist_id" db:"chatlist_id"`
+	Username    string `json:"username" db:"username" binding:"required"`
+	Description string `json:"description" db:"description"`
+}
+
 type Client struct {
 	Conn     *websocket.Conn
 	Message  chan *ChatItem
@@ -33,13 +40,6 @@ type UsersList struct {
 	ListId int
 }
 
-type ChatItem struct {
-	Id          int    `json:"id" db:"id"`
-	Chatlist_id string `json:"chatlist_id" db:"chatlist_id"`
-	Username    string `json:"username" db:"username" binding:"required"`
-	Description string `json:"description" db:"description"`
-}
-
 type FindUserInput struct {
 	Count		int  `json:"count" db:"count"`
 	StartDay 	string `json:"startday" db:"startday"`
@@ -49,7 +49,7 @@ type FindUserInput struct {
 }
 
 type ItemLists struct {
-	Id     	   int
+	Id         int
 	ChatListId int
 	ChatItemId int
 }

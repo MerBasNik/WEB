@@ -13,36 +13,32 @@ func NewChatListService(repo repository.ChatList) *ChatListService {
 	return &ChatListService{repo: repo}
 }
 
-func (s *ChatListService) Create(userId chat.UsersForChat) (int, error) {
-	return s.repo.Create(userId)
+func (s *ChatListService) CreateList(requestCreateList chat.RequestCreateList) (int, error) {
+	return s.repo.CreateList(requestCreateList)
 }
 
 func (s *ChatListService) RenameChat(userId, chatId int, chat chat.UpdateChat) error {
 	return s.repo.RenameChat(userId, chatId, chat)
 }
 
-func (s *ChatListService) GetAll(userId int) ([]chat.ChatList, error) {
-	return s.repo.GetAll(userId)
+func (s *ChatListService) GetAllLists(userId int) ([]chat.ChatList, error) {
+	return s.repo.GetAllLists(userId)
 }
 
-func (s *ChatListService) GetById(userId, listId int) (chat.ChatList, error) {
-	return s.repo.GetById(userId, listId)
+func (s *ChatListService) GetListById(userId, listId int) (chat.ChatList, error) {
+	return s.repo.GetListById(userId, listId)
 }
 
-func (s *ChatListService) Delete(userId, listId int) error {
-	return s.repo.Delete(userId, listId)
+func (s *ChatListService) DeleteList(userId, listId int) error {
+	return s.repo.DeleteList(userId, listId)
 }
 
-func (s *ChatListService) DeleteFindUsers(userId chat.UsersForChat) error {
-	return s.repo.DeleteFindUsers(userId)
-}
-
-func (s *ChatListService) Update(userId, listId int, input chat.UpdateListInput) error {
+func (s *ChatListService) UpdateList(userId, listId int, input chat.UpdateListInput) error {
 	if err := input.Validate(); err != nil {
 		return err
 	}
 
-	return s.repo.Update(userId, listId, input)
+	return s.repo.UpdateList(userId, listId, input)
 }
 
 func (s *ChatListService) FindByTime(userId int, input chat.FindUserInput) ([]int, error) {
@@ -55,4 +51,8 @@ func (s *ChatListService) FindThreeByHobby(list_users []int) ([]chat.UserHobby, 
 
 func (s *ChatListService) FindTwoByHobby(list_users []int) ([]chat.UserHobby, error) {
 	return s.repo.FindTwoByHobby(list_users)
+}
+
+func (s *ChatListService) DeleteFindUsers(userId chat.UsersForChat) error {
+	return s.repo.DeleteFindUsers(userId)
 }

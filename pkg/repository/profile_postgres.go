@@ -111,65 +111,21 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 	return err
 }
 
+// func (r *ProfilePostgres) UploadAvatar(profileId int, directory string) error {
+// 	tx, err := r.db.Begin()
+// 	if err != nil {
+// 		return err
+// 	}
 
-func (r *ProfilePostgres) InitAllHobbies() error {
-	tx, err := r.db.Begin()
-	if err != nil {
-	 	return err
-	}
-	 
-	createListsHobbies := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1)", userHobbyTable)
-	
-	var hobbies []chat.UserHobbyInput
-	var hobby chat.UserHobbyInput
-	{
-	 	hobby.Description = "NFL"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "NBA"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Мировые новости"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "ChatGPT"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "One Piece"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Midjourney"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Cплетни о знаменитостях"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Call of Duty"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Baldur’s Gate 3"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Minecraft"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Playstation"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Genshin Impact"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "GTA"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Sims"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Terraria"
-	 	hobbies = append(hobbies, hobby)
-	 	hobby.Description = "Red Dead Redemption"
-	 	hobbies = append(hobbies, hobby)
-	}
-	
-	var lengthOfHobbies = len(hobbies)
-	for i := 0; i < lengthOfHobbies; i++ {
-	 	_, err = tx.Exec(createListsHobbies, hobbies[i].Description)
-	 	fmt.Print(hobbies[i])
-	 	if err != nil {
-	 	 	tx.Rollback()
-	 	 	return err
-	 	}
-	}
-	   
-	return tx.Commit()
-}
+// 	createUsersListQuery := fmt.Sprintf("INSERT INTO %s photo VALUES $1", usersProfileTable)
+// 	_, err = tx.Exec(createUsersListQuery, directory)
+// 	if err != nil {
+// 		tx.Rollback()
+// 		return err
+// 	}
 
+// 	return tx.Commit()
+// }
 
 func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
 	var list_id []int
@@ -204,7 +160,6 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 			return list_id, err
 		}
 	}
-	
 
 	return list_id, tx.Commit()
 }
@@ -225,4 +180,62 @@ func (r *ProfilePostgres) DeleteHobby(profId, hobbyId int) error {
 	_, err := r.db.Exec(query, profId, hobbyId)
 
 	return err
+}
+
+func (r *ProfilePostgres) InitAllHobbies() error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+
+	createListsHobbies := fmt.Sprintf("INSERT INTO %s (description) VALUES ($1)", userHobbyTable)
+
+	var hobbies []chat.UserHobbyInput
+	var hobby chat.UserHobbyInput
+	{
+		hobby.Description = "NFL"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "NBA"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Мировые новости"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "ChatGPT"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "One Piece"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Midjourney"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Cплетни о знаменитостях"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Call of Duty"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Baldur’s Gate 3"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Minecraft"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Playstation"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Genshin Impact"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "GTA"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Sims"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Terraria"
+		hobbies = append(hobbies, hobby)
+		hobby.Description = "Red Dead Redemption"
+		hobbies = append(hobbies, hobby)
+	}
+
+	var lengthOfHobbies = len(hobbies)
+	for i := 0; i < lengthOfHobbies; i++ {
+		_, err = tx.Exec(createListsHobbies, hobbies[i].Description)
+		fmt.Print(hobbies[i])
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit()
 }

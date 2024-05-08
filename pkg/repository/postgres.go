@@ -2,20 +2,20 @@ package repository
 
 import (
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 )
 
 const (
-	usersTable        	   = "users"
-	chatListsTable    	   = "chat_lists"
-	chatItemsTable    	   = "chat_items"
-	itemsListsTable   	   = "items_lists"
-	userHobbyTable 	       = "users_hobby"
+	usersTable             = "users"
+	chatListsTable         = "chat_lists"
+	chatItemsTable         = "chat_items"
+	userHobbyTable         = "users_hobby"
 	usersProfileTable      = "users_profile"
 	usersProfileListsTable = "users_profile_lists"
 	usersHobbyListsTable   = "users_hobby_lists"
 	usersChatListsTable    = "users_chat_lists"
-	findUsersTable		   = "find_users"
+	findUsersTable         = "find_users"
 )
 
 type Config struct {

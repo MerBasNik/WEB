@@ -22,7 +22,7 @@ CREATE TABLE chat_lists
 (
     id          serial       PRIMARY KEY,
     title       varchar(255) not null
-    --photo 
+    -- photo 
     -- listchat references chat_items on delete cascade not null 
     -- description varchar(255)
 );
@@ -61,10 +61,9 @@ CREATE TABLE users_hobby_lists
 
 CREATE TABLE users_chat_lists
 (
-    id           serial                            PRIMARY KEY,
+    id           serial                                              PRIMARY KEY,
     user_id      int references users (id)         on delete cascade not null,
-    chatlists_id int references chat_lists (id)    on delete cascade not null,
-    chatName     varchar(255)                      not null
+    chatlists_id int references chat_lists (id)    on delete cascade not null
 );
 
 CREATE TABLE chat_items
@@ -73,6 +72,7 @@ CREATE TABLE chat_items
     username    varchar(255) not null,
     description varchar(255),
     chatlist_id int references chat_lists (id) on delete cascade not null
+    -- done        boolean      not null default false
 );
 
 

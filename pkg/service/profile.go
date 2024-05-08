@@ -5,7 +5,6 @@ import (
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 )
 
-
 type ProfileService struct {
 	repo repository.Profile
 }
@@ -17,8 +16,6 @@ type Settings struct {
 }
 
 var AppSettings = &Settings{}
-
-
 
 func NewProfileService(repo repository.Profile) *ProfileService {
 	return &ProfileService{repo: repo}
@@ -55,82 +52,3 @@ func (s *ProfileService) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
 	return s.repo.DeleteHobby(profId, hobbyId)
 }
-
-// func (s *ProfileService) GetAvatar(userId int, c *gin.Context) (string, error) {
-// 	err = s.repo.Profile.GetAvatar(userId, id)
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-
-// 	if !user.ProfileIconPath.Valid {
-// 		c.JSON(http.StatusNotFound, gin.H{"error": "Avatar not found"})
-// 		return
-// 	}
-
-// 	avatarPath := settings.AppSettings.EnvVars.AvatarBasePath + "/" + user.ProfileIconPath.String
-// 	c.Header("Content-Disposition", fmt.Sprintf("attachment; filename=%s", user.ProfileIconPath.String))
-// 	c.File(avatarPath)
-// }
-
-
-
-// func (s *ProfileService) RemoveAvatar(userId int, c *gin.Context) (string, error) {
-// 	userId, err := getUserId(c)
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-
-// 	id, err := strconv.Atoi(c.Param("id"))
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
-// 		return
-// 	}
-
-// 	if user.ProfileIconPath.Valid {
-// 		if err = os.Remove(settings.AppSettings.EnvVars.AvatarBasePath + "/" + user.ProfileIconPath.String); err != nil {
-// 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove previous avatar"})
-// 			return
-// 		}
-// 	}
-
-// 	if err = user.RemoveProfileIconPath(); err != nil {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove avatar in DB"})
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, gin.H{
-// 		"message": "Avatar removed successfully",
-// 	})
-// }
-	
-
-
-
-
-
-
-
-// func getEnv(key, fallback string) string {
-// 	if value, exists := os.LookupEnv(key); exists {
-// 		return value
-// 	}
-// 	return fallback
-// }
-
-// func NewEnvVars() *EnvVars {
-// 	if err := godotenv.Load(); err != nil {
-// 		log.Print("No .env file found")
-// 	}
-
-// 	envVars := EnvVars{}
-
-// 	envVars.AvatarBasePath = getEnv("AVATAR_BASE_PATH", "./")
-
-// 	return &envVars
-// }
-
-// func Setup() {
-// 	AppSettings.EnvVars = NewEnvVars()
-// }

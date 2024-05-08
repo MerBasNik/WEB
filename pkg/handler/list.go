@@ -21,7 +21,7 @@ import (
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/find_chats_users [post]
-func (h *Handler) findUsersByTime(c *gin.Context)  {
+func (h *Handler) findUsersByTime(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -60,7 +60,7 @@ func (h *Handler) findUsersByTime(c *gin.Context)  {
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/find_chats_users_by_hobby [post]
-func (h *Handler) findUsersByHobby(c *gin.Context)  {
+func (h *Handler) findUsersByHobby(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -115,26 +115,20 @@ func (h *Handler) findUsersByHobby(c *gin.Context)  {
 // @ID create-chat
 // @Accept  json
 // @Produce  json
-// @Param list_users_id body chat.UsersForChat true "Chat Users Id"
+// @Param input body chat.ChatList true "list info"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/create_chat [post]
 func (h *Handler) createList(c *gin.Context) {
-	var list_users_id chat.UsersForChat
-	if err := c.BindJSON(&list_users_id); err != nil {
+	var input chat.RequestCreateList
+	if err := c.BindJSON(&input); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	chat_id, err := h.services.ChatList.Create(list_users_id)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	err = h.services.ChatList.DeleteFindUsers(list_users_id)
+	chat_id, err := h.services.ChatList.CreateList(input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -144,52 +138,6 @@ func (h *Handler) createList(c *gin.Context) {
 		"chat_id": chat_id,
 	})
 }
-
-
-// @Summary Rename Chat
-// @Security ApiKeyAuth
-// @Tags chats
-// @Description rename chat
-// @ID rename-chat
-// @Accept  json
-// @Produce  json
-// @Param   chat_id path int true "Chat Id"
-// @Param   chatName body chat.UpdateChat true "list info"
-// @Success 200 {integer} statusResponse
-// @Failure 400,404 {object} errorResponse
-// @Failure 500 {object} errorResponse
-// @Failure default {object} errorResponse
-// @Router /api/chats/rename_chat/{chat_id} [put]
-func (h *Handler) renameChat(c *gin.Context) {
-	userId, err := getUserId(c)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	var chatName chat.UpdateChat
-	if err := c.BindJSON(&chatName); err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, err.Error())
-		return
-	}
-	
-	chat_id, err := strconv.Atoi(c.Param("chat_id"))
-	if err != nil {
-		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
-		return
-	}
-
-	err = h.services.ChatList.RenameChat(userId, chat_id, chatName)
-	if err != nil {
-		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	c.JSON(http.StatusOK, statusResponse{
-		Status: "ok",
-	})
-}
-
 
 type getAllListsResponse struct {
 	Data []chat.ChatList `json:"data"`
@@ -214,7 +162,7 @@ func (h *Handler) getAllLists(c *gin.Context) {
 		return
 	}
 
-	lists, err := h.services.ChatList.GetAll(userId)
+	lists, err := h.services.ChatList.GetAllLists(userId)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -251,7 +199,7 @@ func (h *Handler) getListById(c *gin.Context) {
 		return
 	}
 
-	list, err := h.services.ChatList.GetById(userId, chat_id)
+	list, err := h.services.ChatList.GetListById(userId, chat_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
@@ -259,7 +207,6 @@ func (h *Handler) getListById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, list)
 }
-
 
 // @Summary Update Chat
 // @Security ApiKeyAuth
@@ -294,7 +241,7 @@ func (h *Handler) updateList(c *gin.Context) {
 		return
 	}
 
-	if err := h.services.ChatList.Update(userId, chat_id, input); err != nil {
+	if err := h.services.ChatList.UpdateList(userId, chat_id, input); err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -328,7 +275,7 @@ func (h *Handler) deleteList(c *gin.Context) {
 		return
 	}
 
-	err = h.services.ChatList.Delete(userId, chat_id)
+	err = h.services.ChatList.DeleteList(userId, chat_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
