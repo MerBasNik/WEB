@@ -53,6 +53,6 @@ func (s *ChatListService) FindTwoByHobby(list_users []int) ([]chat.UserHobby, er
 	return s.repo.FindTwoByHobby(list_users)
 }
 
-func (s *ChatListService) DeleteFindUsers(userId chat.UsersForChat) error {
+func (s *ChatListService) DeleteFindUsers(userId chat.RequestCreateList) error {
 	return s.repo.DeleteFindUsers(userId)
 }

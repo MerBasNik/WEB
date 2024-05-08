@@ -115,20 +115,26 @@ func (h *Handler) findUsersByHobby(c *gin.Context) {
 // @ID create-chat
 // @Accept  json
 // @Produce  json
-// @Param input body chat.ChatList true "list info"
+// @Param list_users_id body chat.RequestCreateList true "Chat Users Id"
 // @Success 200 {integer} integer 1
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
 // @Router /api/chats/create_chat [post]
 func (h *Handler) createList(c *gin.Context) {
-	var input chat.RequestCreateList
-	if err := c.BindJSON(&input); err != nil {
+	var list_users_id chat.RequestCreateList
+	if err := c.BindJSON(&list_users_id); err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	chat_id, err := h.services.ChatList.CreateList(input)
+	chat_id, err := h.services.ChatList.CreateList(list_users_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	err = h.services.ChatList.DeleteFindUsers(list_users_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

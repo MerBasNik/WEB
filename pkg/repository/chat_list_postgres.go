@@ -220,12 +220,12 @@ func (r *ChatListPostgres) FindTwoByHobby(list_users []int) ([]chat.UserHobby, e
 	return lists, err
 }
 
-func (r *ChatListPostgres) DeleteFindUsers(userId chat.UsersForChat) error {
+func (r *ChatListPostgres) DeleteFindUsers(userId chat.RequestCreateList) error {
 	query := fmt.Sprintf("DELETE FROM %s tl WHERE tl.user_id = $1", findUsersTable)
-	if _, err := r.db.Exec(query, userId.FirstUserId); err != nil {
+	if _, err := r.db.Exec(query, userId.UsersId[0]); err != nil {
 		return err
 	}
-	if _, err := r.db.Exec(query, userId.SecondUserId); err != nil {
+	if _, err := r.db.Exec(query, userId.UsersId[1]); err != nil {
 		return err
 	}
 
