@@ -5,7 +5,6 @@ import (
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 )
 
-
 type ProfileService struct {
 	repo repository.Profile
 }
@@ -17,8 +16,6 @@ type Settings struct {
 }
 
 var AppSettings = &Settings{}
-
-
 
 func NewProfileService(repo repository.Profile) *ProfileService {
 	return &ProfileService{repo: repo}
@@ -73,8 +70,6 @@ func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
 // 	c.File(avatarPath)
 // }
 
-
-
 // func (s *ProfileService) RemoveAvatar(userId int, c *gin.Context) (string, error) {
 // 	userId, err := getUserId(c)
 // 	if err != nil {
@@ -104,13 +99,6 @@ func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
 // 		"message": "Avatar removed successfully",
 // 	})
 // }
-	
-
-
-
-
-
-
 
 // func getEnv(key, fallback string) string {
 // 	if value, exists := os.LookupEnv(key); exists {

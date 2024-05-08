@@ -1,11 +1,11 @@
 package service
 
 import (
-	"math/rand"
 	"crypto/sha1"
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"math/rand"
 	"net/smtp"
 	"os"
 	"time"
@@ -143,8 +143,8 @@ func (s *AuthService) ResetPassword(resetToken, password string) error {
 
 func SendEmail(email, resetToken string) error {
 	// sender data
-	from := os.Getenv("FROM_EMAIL") //ex: "John.Doe@gmail.com"
-	password := os.Getenv("SMTP_PWD")   // ex: "ieiemcjdkejspqz"
+	from := os.Getenv("FROM_EMAIL")   //ex: "John.Doe@gmail.com"
+	password := os.Getenv("SMTP_PWD") // ex: "ieiemcjdkejspqz"
 	// receiver address privided through toEmail argument
 	to := []string{email}
 	// smtp - Simple Mail Transfer Protocol
@@ -157,14 +157,14 @@ func SendEmail(email, resetToken string) error {
 	// https must be used since we are sending personal data through url parameters
 
 	//  ???????
-	body := "<body>Hello, you have received an email with information to change your password.<br>"+
-	"To set a new password, you need to click on the link below.<br>"+
-	"You will be redirected to the rndmCoffee company page,<br>"+
-	"where you can successfully complete this operation.<br><br>"+
-	"https://infotech12.eljur.ru/authorize" + resetToken + 
-	"<a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize/"+resetToken+
-	"\"><br><br>RESET PASSWORD</a><br><br> If you haven't forgotten your password, you can ignore this email.<br><br>" + 
-	"With all due respect to you,<br> the rndmCoffee team</body>"
+	body := "<body>Hello, you have received an email with information to change your password.<br>" +
+		"To set a new password, you need to click on the link below.<br>" +
+		"You will be redirected to the rndmCoffee company page,<br>" +
+		"where you can successfully complete this operation.<br><br>" +
+		"https://infotech12.eljur.ru/authorize" + resetToken +
+		"<a rel=\"nofollow noopener noreferrer\" target=\"_blank\" href=\"https://infotech12.eljur.ru/authorize/" + resetToken +
+		"\"><br><br>RESET PASSWORD</a><br><br> If you haven't forgotten your password, you can ignore this email.<br><br>" +
+		"With all due respect to you,<br> the rndmCoffee team</body>"
 
 	//fmt.Println("body:", body)
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"

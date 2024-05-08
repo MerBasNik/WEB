@@ -32,16 +32,16 @@ const docTemplate = `{
                 "tags": [
                     "chats"
                 ],
-                "summary": "Create Chat",
+                "summary": "Create chat",
                 "operationId": "create-chat",
                 "parameters": [
                     {
-                        "description": "Chat Users Id",
-                        "name": "list_users_id",
+                        "description": "list info",
+                        "name": "input",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/chat.UsersForChat"
+                            "$ref": "#/definitions/chat.ChatList"
                         }
                     }
                 ],
@@ -105,70 +105,6 @@ const docTemplate = `{
                         "name": "chat_id",
                         "in": "path",
                         "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/chats/delete_find_users": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "delete find users",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "find"
-                ],
-                "summary": "Delete Find Users",
-                "operationId": "delete-find-users",
-                "parameters": [
-                    {
-                        "description": "Chat Users Id",
-                        "name": "list_users_id",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/chat.UsersForChat"
-                        }
                     }
                 ],
                 "responses": {
@@ -448,77 +384,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/chats/rename_chat/{chat_id}": {
-            "put": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "rename chat",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "chats"
-                ],
-                "summary": "Rename Chat",
-                "operationId": "rename-chat",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Chat Id",
-                        "name": "chat_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "list info",
-                        "name": "chatName",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/chat.UpdateChat"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/chats/update_chat/{chat_id}": {
             "put": {
                 "security": [
@@ -661,68 +526,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/chats/{chat_id}/items/delete_item/{item_id}": {
-            "delete": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "delete chat item",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "chats items"
-                ],
-                "summary": "Delete Chat Item",
-                "operationId": "delete-chat-item",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Item Id",
-                        "name": "item_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handler.statusResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/chats/{chat_id}/items/get_all_items": {
             "get": {
                 "security": [
@@ -785,7 +588,69 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/chats/{chat_id}/items/get_item/{item_id}": {
+        "/api/items/delete_item/{item_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "delete chat item",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "chats items"
+                ],
+                "summary": "Delete Chat Item",
+                "operationId": "delete-chat-item",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Item Id",
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.statusResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    },
+                    "default": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/handler.errorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/items/get_item/{item_id}": {
             "get": {
                 "security": [
                     {
@@ -847,69 +712,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/chats/{chat_id}/items/get_users": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get Chat Users",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "chats items"
-                ],
-                "summary": "Get Chat Users",
-                "operationId": "get-chat-users",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Chat Id",
-                        "name": "chat_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/chats/{chat_id}/items/update_item/{item_id}": {
+        "/api/items/update_item/{item_id}": {
             "put": {
                 "security": [
                     {
@@ -1177,59 +980,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/profile/init_all_hobby": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "init all hobby",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "hobby"
-                ],
-                "summary": "Init All Hobby",
-                "operationId": "init-all-hobby",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    },
-                    "default": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/handler.errorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/profile/upload_avatar": {
             "put": {
                 "security": [
@@ -1313,13 +1063,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/definitions/chat.UserHobbyInput"
-                                }
-                            }
+                            "$ref": "#/definitions/chat.UserHobbyInput"
                         }
                     }
                 ],
@@ -1842,14 +1586,6 @@ const docTemplate = `{
                 }
             }
         },
-        "chat.UpdateChat": {
-            "type": "object",
-            "properties": {
-                "chat_name": {
-                    "type": "string"
-                }
-            }
-        },
         "chat.UpdateItemInput": {
             "type": "object",
             "properties": {
@@ -1932,17 +1668,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
-                }
-            }
-        },
-        "chat.UsersForChat": {
-            "type": "object",
-            "properties": {
-                "first_user_id": {
-                    "type": "integer"
-                },
-                "second_user_id": {
-                    "type": "integer"
                 }
             }
         },

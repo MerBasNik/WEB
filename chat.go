@@ -19,6 +19,13 @@ type ChatList struct {
 	Title   string             `json:"title" db:"title" binding:"required"`
 }
 
+type ChatItem struct {
+	Id          int    `json:"id" db:"id"`
+	Chatlist_id string `json:"chatlist_id" db:"chatlist_id"`
+	Username    string `json:"username" db:"username" binding:"required"`
+	Description string `json:"description" db:"description"`
+}
+
 type Client struct {
 	Conn     *websocket.Conn
 	Message  chan *ChatItem
@@ -33,28 +40,21 @@ type UsersList struct {
 	ListId int
 }
 
-type ChatItem struct {
-	Id          int    `json:"id" db:"id"`
-	Chatlist_id string `json:"chatlist_id" db:"chatlist_id"`
-	Username    string `json:"username" db:"username" binding:"required"`
-	Description string `json:"description" db:"description"`
-}
-
 type FindUserInput struct {
-	StartDay 	string `json:"startday" db:"startday"`
-	EndDay 		string `json:"endday" db:"endday"`
-	StartTime 	string `json:"starttime" db:"starttime"`
-	EndTime 	string `json:"endtime" db:"endtime"`
+	StartDay  string `json:"startday" db:"startday"`
+	EndDay    string `json:"endday" db:"endday"`
+	StartTime string `json:"starttime" db:"starttime"`
+	EndTime   string `json:"endtime" db:"endtime"`
 }
 
 type ItemLists struct {
-	Id     	   int
+	Id         int
 	ChatListId int
 	ChatItemId int
 }
 
 type UpdateListInput struct {
-	Title       *string `json:"title"`
+	Title *string `json:"title"`
 }
 
 func (i UpdateListInput) Validate() error {
@@ -66,22 +66,14 @@ func (i UpdateListInput) Validate() error {
 }
 
 type UpdateItemInput struct {
-	Description *string `json:"description" db:"description"`
+	Title       *string `json:"title"`
+	Description *string `json:"description"`
 }
 
 func (i UpdateItemInput) Validate() error {
-	if i.Description == nil {
+	if i.Title == nil && i.Description == nil {
 		return errors.New("update structure has no values")
 	}
 
 	return nil
-}
-
-type UsersForChat struct {
-	FirstUserId int `json:"first_user_id"`
-	SecondUserId int `json:"second_user_id"`
-}
-
-type UpdateChat struct {
-	ChatName *string `json:"chat_name" db:"chatName"`
 }

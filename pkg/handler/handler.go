@@ -59,25 +59,27 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 			chats.POST("/find_chats_users_by_hobby", h.findUsersByHobby)
 			chats.GET("/get_chat/:chat_id", h.getListById)
 			chats.PUT("/update_chat/:chat_id", h.updateList)
-			chats.PUT("/rename_chat/:chat_id", h.renameChat)
 			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
 
 			items := chats.Group(":chat_id/items")
 			{
 				items.POST("/create_item", h.createItem)
-				items.GET("/get_all_items", h.getAllItems)
-				items.GET("/get_users", h.getUsers)
-				items.GET("/get_item/:item_id", h.getItemById)
-				items.PUT("/update_item/:item_id", h.updateItem)
-				items.DELETE("/delete_item/:item_id", h.deleteItem)
+				// items.GET("/get_all_items", h.getAllItems)
 			}
 		}
+
+		// items := api.Group("/items")
+		// {
+		// 	items.GET("/get_item/:item_id", h.getItemById)
+		// 	items.PUT("/update_item/:item_id", h.updateItem)
+		// 	items.DELETE("/delete_item/:item_id", h.deleteItem)
+		// }
 
 		webSocketApi := api.Group("/ws")
 		{
 			webSocketApi.POST("/createRoom", wsHandler.CreateRoom)
 			webSocketApi.GET("/joinRoom/:roomId", func(c *gin.Context) {
-				//wsHandler.JoinRoom(h.services.CreateItem())
+				wsHandler.JoinRoom(c, h.services.CreateItem)
 			})
 		}
 	}
@@ -90,7 +92,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		c.Writer.Header().Set("Access-Control-Max-Age", "86400")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, UPDATE")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, prof_id")
 		c.Writer.Header().Set("Access-Control-Expose-Headers", "Content-Length")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 
