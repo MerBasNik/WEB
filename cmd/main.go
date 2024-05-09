@@ -39,11 +39,11 @@ func main() {
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
-		Host:     viper.GetString("db.host"),
-		Port:     viper.GetString("db.port"),
-		Username: viper.GetString("db.username"),
-		DBName:   viper.GetString("db.dbname"),
-		SSLMode:  viper.GetString("db.sslmode"),
+		Host:     "amvera-vadim123r123r1r1-cnpg-rndmcoffee-rw", //viper.GetString("db.host"),
+		Port:     "5432", //viper.GetString("db.port"),
+		Username: "vadim", //viper.GetString("db.username"),
+		DBName:   "coffeedb", //viper.GetString("db.dbname"),
+		//SSLMode:  "", //viper.GetString("db.sslmode"),
 		Password: os.Getenv("DB_PASSWORD"),
 	})
 	if err != nil {
