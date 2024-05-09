@@ -1,7 +1,6 @@
 package service
 
 import (
-	chat "github.com/MerBasNik/rndmCoffee"
 	"github.com/MerBasNik/rndmCoffee/pkg/repository"
 )
 
@@ -14,14 +13,14 @@ func NewChatItemService(repo repository.ChatItem, listRepo repository.ChatList) 
 	return &ChatItemService{repo: repo, listRepo: listRepo}
 }
 
-func (s *ChatItemService) CreateItem(userId, listId int, input chat.ChatItem) (int, error) {
+func (s *ChatItemService) CreateItem(userId, listId int, username, description, chatlist_id string) (int, error) {
 	_, err := s.listRepo.GetListById(userId, listId)
 	if err != nil {
 		// list does not exists or does not belongs to user
 		return 0, err
 	}
 
-	return s.repo.CreateItem(input)
+	return s.repo.CreateItem(username, description, chatlist_id)
 }
 
 // func (s *ChatItemService) GetAll(userId, listId int) ([]chat.ChatItem, error) {

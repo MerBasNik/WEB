@@ -8,7 +8,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 
-	_ "github.com/MerBasNik/rndmCoffee/docs"
+	//_ "github.com/MerBasNik/rndmCoffee/docs"
 )
 
 type Handler struct {
@@ -64,16 +64,8 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 			items := chats.Group(":chat_id/items")
 			{
 				items.POST("/create_item", h.createItem)
-				// items.GET("/get_all_items", h.getAllItems)
 			}
 		}
-
-		// items := api.Group("/items")
-		// {
-		// 	items.GET("/get_item/:item_id", h.getItemById)
-		// 	items.PUT("/update_item/:item_id", h.updateItem)
-		// 	items.DELETE("/delete_item/:item_id", h.deleteItem)
-		// }
 
 		webSocketApi := api.Group("/ws")
 		{

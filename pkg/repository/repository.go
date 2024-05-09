@@ -39,7 +39,7 @@ type ChatList interface {
 }
 
 type ChatItem interface {
-	CreateItem(input chat.ChatItem) (int, error)
+	CreateItem(username, description, chatlist_id string) (int, error)
 	// GetAll(userId, listId int) ([]chat.ChatItem, error)
 	// GetById(userId, itemId int) (chat.ChatItem, error)
 	// Delete(userId, itemId int) error

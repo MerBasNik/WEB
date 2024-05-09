@@ -41,7 +41,7 @@ func (h *Handler) createItem(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.ChatItem.CreateItem(userId, chat_id, input)
+	id, err := h.services.ChatItem.CreateItem(userId, chat_id, input.Username, input.Description, input.Chatlist_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
