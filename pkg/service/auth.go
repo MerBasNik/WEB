@@ -40,7 +40,7 @@ func (s *AuthService) CreateUser(user chat.User) (int, error) {
 }
 
 func (s *AuthService) GetUser(email, password string) (chat.User, error) {
-	return s.repo.GetUser(email, password)
+	return s.repo.GetUser(email, generatePasswordHash(password))
 }
 
 func (s *AuthService) GenerateToken(email, password string) (string, error) {

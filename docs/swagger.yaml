@@ -1,0 +1,676 @@
+basePath: /
+definitions:
+  chat.FindUserInput:
+    properties:
+      count:
+        type: integer
+      endday:
+        type: string
+      endtime:
+        type: string
+      startday:
+        type: string
+      starttime:
+        type: string
+    type: object
+  chat.ForgotPasswordInput:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  chat.Profile:
+    properties:
+      birthday:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      photo:
+        type: string
+      surname:
+        type: string
+      telegram:
+        type: string
+    required:
+    - name
+    - photo
+    - surname
+    - telegram
+    type: object
+  chat.ResetPasswordInput:
+    properties:
+      password:
+        type: string
+      password-repeat:
+        type: string
+    required:
+    - password
+    - password-repeat
+    type: object
+  chat.UpdateProfile:
+    properties:
+      birthday:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      name:
+        type: string
+      photo:
+        type: string
+      surname:
+        type: string
+      telegram:
+        type: string
+    type: object
+  chat.UserHobby:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+    required:
+    - description
+    type: object
+  chat.UserHobbyInput:
+    properties:
+      description:
+        type: string
+    required:
+    - description
+    type: object
+  chat.UserInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  handler.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.getAllHobbyResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/chat.UserHobby'
+        type: array
+    type: object
+  handler.signInInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  handler.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: API Server for ChatList Application
+  title: Chat App API
+  version: "1.0"
+paths:
+  /api/chats/find_chats_users:
+    post:
+      consumes:
+      - application/json
+      description: find users for chat
+      operationId: find-user-by-time
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.FindUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find Users for chat
+      tags:
+      - find
+  /api/chats/find_chats_users_by_hobby:
+    post:
+      consumes:
+      - application/json
+      description: find users by hobby for chat
+      operationId: find-user-by-hobby
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.FindUserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Find Users by hobby for chat
+      tags:
+      - find
+  /api/profile/{prof_id}/hobby/create_hobby:
+    post:
+      consumes:
+      - application/json
+      description: create hobby
+      operationId: create-hobby
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          additionalProperties:
+            items:
+              $ref: '#/definitions/chat.UserHobbyInput'
+            type: array
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create hobby
+      tags:
+      - hobby
+  /api/profile/{prof_id}/hobby/delete_hobby/{hobby_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete hobby
+      operationId: delete-hobby
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      - description: Hobby Id
+        in: path
+        name: hobby_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Hobby
+      tags:
+      - hobby
+  /api/profile/{prof_id}/hobby/get_hobby:
+    get:
+      consumes:
+      - application/json
+      description: get all hobby
+      operationId: get-all-hobby
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.getAllHobbyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Hobby
+      tags:
+      - hobby
+  /api/profile/create_profile:
+    post:
+      consumes:
+      - application/json
+      description: create profile
+      operationId: create-profile
+      parameters:
+      - description: profile info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.Profile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Profile
+      tags:
+      - profile
+  /api/profile/edit_profile/{prof_id}:
+    put:
+      consumes:
+      - application/json
+      description: edit profile
+      operationId: edit-profile
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      - description: profile info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UpdateProfile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Edit Profile
+      tags:
+      - profile
+  /api/profile/get_profile/{prof_id}:
+    get:
+      consumes:
+      - application/json
+      description: get profile
+      operationId: get-profile
+      parameters:
+      - description: Prof Id
+        in: path
+        name: prof_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Profile
+      tags:
+      - profile
+  /api/profile/upload_avatar:
+    put:
+      consumes:
+      - multipart/form-data
+      description: updates user avatar
+      operationId: upload-avatar
+      parameters:
+      - description: Avatar image file (JPG, JPEG, PNG, or GIF)
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Upload Avatar
+      tags:
+      - profile
+  /auth/forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: forgot password
+      operationId: forgot-password
+      parameters:
+      - description: email
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ForgotPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Forgot Password
+      tags:
+      - auth
+  /auth/reset-password/{token}:
+    put:
+      consumes:
+      - application/json
+      description: reset password
+      operationId: reset-password
+      parameters:
+      - description: Token
+        in: path
+        name: token
+        required: true
+        type: string
+      - description: passwords
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.ResetPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: Reset Password
+      tags:
+      - auth
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.signInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: SignIn
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      operationId: create-account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/chat.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.errorResponse'
+      summary: SignUp
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

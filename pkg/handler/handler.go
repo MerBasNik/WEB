@@ -8,7 +8,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"     // swagger embed files
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 
-	//_ "github.com/MerBasNik/rndmCoffee/docs"
+	_ "github.com/MerBasNik/rndmCoffee/docs"
 )
 
 type Handler struct {

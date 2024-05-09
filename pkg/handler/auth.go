@@ -157,22 +157,3 @@ func (h *Handler) forgotPassword(c *gin.Context) {
 		"token": token,
 	})
 }
-
-// func (h *Handler) changePassword(c *gin.Context) {
-// 	var input chat.ChangePasswordInput
-
-// 	if err := c.BindJSON(&input); err != nil {
-// 		NewErrorResponse(c, http.StatusBadRequest, "invalid input body")
-// 		return
-// 	}
-
-// 	err := h.services.Authorization.PasswordChange(input)
-// 	if err != nil {
-// 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, statusResponse{
-// 		Status: "ok",
-// 	})
-// }

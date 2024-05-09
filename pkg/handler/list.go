@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -35,18 +34,31 @@ func (h *Handler) findUsersByTime(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("111111111")
 	list_id, err := h.services.ChatList.FindByTime(userId, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	fmt.Println("2222222")
+
 
 	list_id = append(list_id, userId)
-	c.JSON(http.StatusOK, map[string]interface{}{
-		"finded user_id for chat": 	list_id,
-	})
+	var lists []int
+	if (input.Count == 2) {
+		if (len(list_id) == 2) {
+			lists = list_id
+		}
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"finded user_id for chat": 	lists,
+		})
+	}
+	if (input.Count == 3) {
+		if (len(list_id) == 3) {
+			lists = list_id
+		}
+		c.JSON(http.StatusOK, map[string]interface{}{
+			"finded user_id for chat": 	lists,
+		})
+	}
 }
 
 
@@ -110,7 +122,7 @@ func (h *Handler) findUsersByHobby(c *gin.Context) {
 	}
 }
 
-	
+
 // @Summary Create Chat
 // @Security ApiKeyAuth
 // @Tags chats
