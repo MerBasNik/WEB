@@ -6,6 +6,7 @@ import (
 )
 
 type Authorization interface {
+	GetUser(email, password string) (chat.User, error)
 	CreateUser(user chat.User) (int, error)
 	GenerateToken(email, password string) (string, error)
 	ParseToken(token string) (int, error)

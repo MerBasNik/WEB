@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -34,11 +35,13 @@ func (h *Handler) findUsersByTime(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("111111111")
 	list_id, err := h.services.ChatList.FindByTime(userId, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
+	fmt.Println("2222222")
 
 	list_id = append(list_id, userId)
 	c.JSON(http.StatusOK, map[string]interface{}{

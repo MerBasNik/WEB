@@ -76,8 +76,16 @@ func (h *Handler) signIn(c *gin.Context) {
 		return
 	}
 
+	var user chat.User
+	user, err = h.services.Authorization.GetUser(input.Email, input.Password)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}	
+
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"token": token,
+		"id": user.Id,
 	})
 }
 
