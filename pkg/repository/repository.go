@@ -33,9 +33,10 @@ type ChatList interface {
 	DeleteList(userId, listId int) error
 	UpdateList(userId, listId int, input chat.UpdateListInput) error
 	FindByTime(userId int, input chat.FindUserInput) ([]int, error)
-	FindThreeByHobby(list_users []int) ([]chat.UserHobby, error)
-	FindTwoByHobby(list_users []int) ([]chat.UserHobby, error)
+	FindThreeByHobby(list_users []int) ([]chat.UserHobby, []int, error)
+	FindTwoByHobby(list_users []int) ([]chat.UserHobby, []int, error)
 	DeleteFindUsers(userId chat.RequestCreateList) error
+	GetUserByListId(listId int) ([]int, error)
 }
 
 type ChatItem interface {

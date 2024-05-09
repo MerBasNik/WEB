@@ -61,6 +61,10 @@ func (h *Handler) findUsersByTime(c *gin.Context) {
 	}
 }
 
+type getHobbyAndIdResponse struct {
+	Data []chat.UserHobby `json:"data"`
+	Users_id []int `json:"users_id"`
+}
 
 // @Summary Find Users by hobby for chat
 // @Security ApiKeyAuth
@@ -70,7 +74,7 @@ func (h *Handler) findUsersByTime(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param input body chat.FindUserInput true "list info"
-// @Success 200 {integer} getAllListsResponse
+// @Success 200 {integer} getHobbyAndIdResponse
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
@@ -96,28 +100,31 @@ func (h *Handler) findUsersByHobby(c *gin.Context) {
 
 	list_id = append(list_id, userId)
 	var lists []chat.UserHobby
+	var list_users_id []int
 	if (input.Count == 2) {
 		if (len(list_id) == 2) {
-			lists, err = h.services.ChatList.FindTwoByHobby(list_id)
+			lists, list_users_id, err = h.services.ChatList.FindTwoByHobby(list_id)
 			if err != nil {
 				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 				return
 			}
 		}
-		c.JSON(http.StatusOK, getAllHobbyResponse{
+		c.JSON(http.StatusOK, getHobbyAndIdResponse{
 			Data: lists,
+			Users_id: list_users_id,
 		})
 	}
 	if (input.Count == 3) {
 		if (len(list_id) == 3) {
-			lists, err = h.services.ChatList.FindThreeByHobby(list_id)
+			lists, list_users_id, err = h.services.ChatList.FindThreeByHobby(list_id)
 			if err != nil {
 				NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 				return
 			}
 		}
-		c.JSON(http.StatusOK, getAllHobbyResponse{
+		c.JSON(http.StatusOK, getHobbyAndIdResponse{
 			Data: lists,
+			Users_id: list_users_id,
 		})
 	}
 }
@@ -194,6 +201,11 @@ func (h *Handler) getAllLists(c *gin.Context) {
 	})
 }
 
+type getListsResponse struct {
+	Data chat.ChatList `json:"data"`
+	Users_id []int `json:"users_id"`
+}
+
 // @Summary Get Chat By Id
 // @Security ApiKeyAuth
 // @Tags chats
@@ -220,13 +232,23 @@ func (h *Handler) getListById(c *gin.Context) {
 		return
 	}
 
-	list, err := h.services.ChatList.GetListById(userId, chat_id)
+	chat, err := h.services.ChatList.GetListById(userId, chat_id)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, list)
+	var users_id []int
+	users_id, err = h.services.ChatList.GetUserByListId(chat_id)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, getListsResponse{
+		Data: chat,
+		Users_id: users_id,
+	})
 }
 
 // @Summary Update Chat

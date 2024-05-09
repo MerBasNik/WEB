@@ -151,38 +151,40 @@ func (r *ChatListPostgres) UpdateList(userId, listId int, input chat.UpdateListI
 }
 
 func (r *ChatListPostgres) FindByTime(userId int, input chat.FindUserInput) ([]int, error) {
-	var id []int
+	var list_users_id []int
 	tx, err := r.db.Begin()
 	if err != nil {
-		return id, err
+		return list_users_id, err
 	}
 
 	createListQuery := fmt.Sprintf("INSERT INTO %s (user_id, count, start_day, end_day, start_time, end_time) VALUES ($1, $2, $3, $4, $5, $6)", findUsersTable)
 	_, err = tx.Exec(createListQuery, userId, input.Count, input.StartDay, input.EndDay, input.StartTime, input.EndTime)
 	if err != nil {
 		tx.Rollback()
-		return id, err
+		return list_users_id, err
 	}
 	tx.Commit()
 
 	query := fmt.Sprintf(`SELECT tl.user_id FROM %s tl WHERE
 	(tl.start_day <= $1) AND ($2 <= tl.end_day) AND 
-	(tl.start_time <= $3) AND ($4 <= tl.end_time) AND tl.user_id!=$5 AND tl.count=$6`, findUsersTable)
-	err = r.db.Select(&id, query, input.EndDay, input.StartDay, input.EndTime, input.StartTime, userId, input.Count)
+	(tl.start_time <= $3) AND ($4 <= tl.end_time) AND tl.user_id!=$5 AND tl.count=$6 LIMIT $7`, findUsersTable)
+	if err := r.db.Select(&list_users_id, query, input.EndDay, input.StartDay, input.EndTime, input.StartTime, 
+		userId, input.Count, input.Count-1); err != nil {
+		return list_users_id, err
+	}
 
-	return id, err
+	return list_users_id, err
 }
 
-func (r *ChatListPostgres) FindThreeByHobby(list_users []int) ([]chat.UserHobby, error) {
+func (r *ChatListPostgres) FindThreeByHobby(list_users []int) ([]chat.UserHobby, []int, error) {
 	var lists []chat.UserHobby
 	var prof_id_list []int
 	var prof_id int
 
-	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`,
-	usersProfileListsTable)
+	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`, usersProfileListsTable)
 	for i := 0; i < 3; i++ {
 		if err := r.db.Get(&prof_id, query, list_users[i]); err != nil {
-			return lists, err
+			return lists, prof_id_list, err
 		}
 		prof_id_list = append(prof_id_list, prof_id)
 	}
@@ -194,19 +196,18 @@ func (r *ChatListPostgres) FindThreeByHobby(list_users []int) ([]chat.UserHobby,
 	userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable)
 	err := r.db.Select(&lists, query, prof_id_list[0], prof_id_list[1], prof_id_list[2])
 
-	return lists, err
+	return lists, prof_id_list, err
 }
 
-func (r *ChatListPostgres) FindTwoByHobby(list_users []int) ([]chat.UserHobby, error) {
+func (r *ChatListPostgres) FindTwoByHobby(list_users []int) ([]chat.UserHobby, []int, error) {
 	var lists []chat.UserHobby
 	var prof_id_list []int
 	var prof_id int
 
-	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`,
-	usersProfileListsTable)
+	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`, usersProfileListsTable)
 	for i := 0; i < 2; i++ {
 		if err := r.db.Get(&prof_id, query, list_users[i]); err != nil {
-			return lists, err
+			return lists, prof_id_list, err
 		}
 		prof_id_list = append(prof_id_list, prof_id)
 	}
@@ -217,7 +218,7 @@ func (r *ChatListPostgres) FindTwoByHobby(list_users []int) ([]chat.UserHobby, e
 	userHobbyTable, usersHobbyListsTable, userHobbyTable, usersHobbyListsTable)
 	err := r.db.Select(&lists, query, prof_id_list[0], prof_id_list[1])
 
-	return lists, err
+	return lists, prof_id_list, err
 }
 
 func (r *ChatListPostgres) DeleteFindUsers(userId chat.RequestCreateList) error {
@@ -230,4 +231,13 @@ func (r *ChatListPostgres) DeleteFindUsers(userId chat.RequestCreateList) error 
 	}
 
 	return nil
+}
+
+func (r *ChatListPostgres) GetUserByListId(listId int) ([]int, error) {
+	var list_users_id []int
+
+	query := fmt.Sprintf(`SELECT tl.user_id FROM %s tl WHERE tl.chatlists_id=$1`, usersChatListsTable)
+	err := r.db.Select(&list_users_id, query, listId)
+
+	return list_users_id, err
 }
