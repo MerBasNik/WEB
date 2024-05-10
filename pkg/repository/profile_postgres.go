@@ -23,7 +23,7 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 		return 0, err
 	}
 
-	var email int
+	var email string
 	query := fmt.Sprintf("SELECT tl.email FROM %s tl WHERE tl.id=$1", usersTable)
 	if err := r.db.Get(&email, query, userId); err != nil {
 		tx.Rollback()
@@ -31,8 +31,8 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 	}
 
 	var id int
-	query = fmt.Sprintf("INSERT INTO %s (name, surname, email, photo, telegram, country, city, birthday) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", usersProfileTable)
-	row := r.db.QueryRow(query, profile.Name, profile.Surname, email, profile.Photo, profile.Telegram, profile.Country, profile.City, profile.Birthday)
+	query = fmt.Sprintf("INSERT INTO %s (name, surname, email, photo, city, birthday) values ($1, $2, $3, $4, $5, $6) RETURNING id", usersProfileTable)
+	row := r.db.QueryRow(query, profile.Name, profile.Surname, email, profile.Photo, profile.City, profile.Birthday)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
 		return 0, err
@@ -51,7 +51,7 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 func (r *ProfilePostgres) GetProfile(userId, profileId int) (chat.Profile, error) {
 	var profile chat.Profile
 
-	query := fmt.Sprintf(`SELECT tl.id, tl.name, tl.surname, tl.email, tl.photo, tl.telegram, tl.country, tl.city, tl.birthday FROM %s tl INNER JOIN %s ul on tl.id = ul.profile_id WHERE ul.user_id = $1 AND ul.profile_id = $2`,
+	query := fmt.Sprintf(`SELECT tl.id, tl.name, tl.surname, tl.email, tl.photo, tl.city, tl.birthday FROM %s tl INNER JOIN %s ul on tl.id = ul.profile_id WHERE ul.user_id = $1 AND ul.profile_id = $2`,
 		usersProfileTable, usersProfileListsTable)
 	err := r.db.Get(&profile, query, userId, profileId)
 
@@ -91,21 +91,9 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 		argId++
 	}
 
-	if input.Country != nil {
-		setValues = append(setValues, fmt.Sprintf("country=$%d", argId))
-		args = append(args, *input.Country)
-		argId++
-	}
-
 	if input.City != nil {
 		setValues = append(setValues, fmt.Sprintf("city=$%d", argId))
 		args = append(args, *input.City)
-		argId++
-	}
-
-	if input.Telegram != nil {
-		setValues = append(setValues, fmt.Sprintf("telegram=$%d", argId))
-		args = append(args, *input.Telegram)
 		argId++
 	}
 

@@ -1161,17 +1161,13 @@
             "required": [
                 "name",
                 "photo",
-                "surname",
-                "telegram"
+                "surname"
             ],
             "properties": {
                 "birthday": {
                     "type": "string"
                 },
                 "city": {
-                    "type": "string"
-                },
-                "country": {
                     "type": "string"
                 },
                 "email": {
@@ -1187,9 +1183,6 @@
                     "type": "string"
                 },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram": {
                     "type": "string"
                 }
             }
@@ -1226,9 +1219,6 @@
                 "city": {
                     "type": "string"
                 },
-                "country": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -1239,9 +1229,6 @@
                     "type": "string"
                 },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram": {
                     "type": "string"
                 }
             }

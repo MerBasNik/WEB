@@ -13,9 +13,7 @@ CREATE TABLE users_profile
     surname             varchar(255) not null,
     email	            varchar(255) not null unique,
     photo               varchar(255) not null,
-    country             varchar(255),
     city	            varchar(255),
-    telegram	        varchar(255) not null,
     birthday            date         default NOW()
 );
 

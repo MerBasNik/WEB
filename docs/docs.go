@@ -1167,17 +1167,13 @@ const docTemplate = `{
             "required": [
                 "name",
                 "photo",
-                "surname",
-                "telegram"
+                "surname"
             ],
             "properties": {
                 "birthday": {
                     "type": "string"
                 },
                 "city": {
-                    "type": "string"
-                },
-                "country": {
                     "type": "string"
                 },
                 "email": {
@@ -1193,9 +1189,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram": {
                     "type": "string"
                 }
             }
@@ -1232,9 +1225,6 @@ const docTemplate = `{
                 "city": {
                     "type": "string"
                 },
-                "country": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string"
                 },
@@ -1245,9 +1235,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "surname": {
-                    "type": "string"
-                },
-                "telegram": {
                     "type": "string"
                 }
             }
