@@ -7,11 +7,12 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
+RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o main
+
+COPY --from=0 /app/main ./
+
 # Download and install any required dependencies
 RUN go mod download
-
-# Build the Go app
-RUN go build -o main .
 
 FROM alpine:latest
 
@@ -19,4 +20,4 @@ FROM alpine:latest
 EXPOSE 8000
 
 # Define the command to run the app when the container starts
-CMD ["/app/main"]
+CMD ["./main", "--port", "8000"]
