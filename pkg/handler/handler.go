@@ -54,12 +54,13 @@ func (h *Handler) InitRoutes(wsHandler *service.HandlerWS) *gin.Engine {
 		chats := api.Group("/chats")
 		{
 			chats.POST("/create_chat", h.createList)
-			chats.GET("/get_all_chats", h.getAllLists)
+			//chats.GET("/get_all_chats", h.getAllLists)
 			chats.POST("/find_chats_users", h.findUsersByTime)
 			chats.POST("/find_chats_users_by_hobby", h.findUsersByHobby)
-			chats.GET("/get_chat/:chat_id", h.getListById)
-			chats.PUT("/update_chat/:chat_id", h.updateList)
-			chats.DELETE("/delete_chat/:chat_id", h.deleteList)
+			//chats.GET("/get_chat/:chat_id", h.getListById)
+			chats.GET("/get_info_for_chat/:chat_id", h.getInfoForListById)
+			chats.PUT("/rename_chat/:chat_id", h.renameChat)
+			//chats.DELETE("/delete_chat/:chat_id", h.deleteList)
 
 			items := chats.Group(":chat_id/items")
 			{

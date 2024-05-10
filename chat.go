@@ -79,10 +79,14 @@ func (i UpdateItemInput) Validate() error {
 }
 
 type UsersForChat struct {
-	FirstUserId int `json:"first_user_id"`
-	SecondUserId int `json:"second_user_id"`
+	UsersId []int `json:"users_id"`
 }
 
 type UpdateChat struct {
 	ChatName *string `json:"chat_name" db:"chatName"`
+}
+
+type UsersInfo struct {
+	Id int `json:"id" db:"id"`
+	UserId int `json:"user_id" db:"user_id"`
 }

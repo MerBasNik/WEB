@@ -26,17 +26,19 @@ type Profile interface {
 }
 
 type ChatList interface {
-	CreateList(requestCreateList chat.RequestCreateList) (int, error)
+	CreateList(input chat.UsersForChat) (int, error)
 	RenameChat(userId, chatId int, chat chat.UpdateChat) error
 	GetAllLists(userId int) ([]chat.ChatList, error)
 	GetListById(userId, listId int) (chat.ChatList, error)
 	DeleteList(userId, listId int) error
-	UpdateList(userId, listId int, input chat.UpdateListInput) error
-	FindByTime(userId int, input chat.FindUserInput) ([]int, error)
-	FindThreeByHobby(list_users []int) ([]chat.UserHobby, []int, error)
-	FindTwoByHobby(list_users []int) ([]chat.UserHobby, []int, error)
-	DeleteFindUsers(userId chat.RequestCreateList) error
+	//UpdateList(userId, listId int, input chat.UpdateListInput) error
+	FindByTime(userId int, input chat.FindUserInput) ([]int, []chat.UsersInfo, error)
+	FindThreeByHobby(list_users []int) ([]chat.UserHobby, error)
+	FindTwoByHobby(list_users []int) ([]chat.UserHobby, error)
+	DeleteFindUsers(input chat.UsersForChat) error
 	GetUserByListId(listId int) ([]int, error)
+	GetUserAvatar(users_id []int) ([]string, error)
+	UpdateFindUsersTable(users_info []chat.UsersInfo, count int) error 
 }
 
 type ChatItem interface {

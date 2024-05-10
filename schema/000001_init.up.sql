@@ -35,7 +35,8 @@ CREATE TABLE find_users
     start_day   date   not null,
     end_day     date   not null,
     start_time  time   not null,
-    end_time    time   not null
+    end_time    time   not null,
+    del         boolean not null default false
 );
 
 
@@ -63,7 +64,8 @@ CREATE TABLE users_chat_lists
 (
     id           serial                                              PRIMARY KEY,
     user_id      int references users (id)         on delete cascade not null,
-    chatlists_id int references chat_lists (id)    on delete cascade not null
+    chatlists_id int references chat_lists (id)    on delete cascade not null,
+    chatName     varchar(255) not null
 );
 
 CREATE TABLE chat_items
