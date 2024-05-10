@@ -153,8 +153,8 @@ export const MeetingForm = (props: MeetingFormProps) => {
 							},
 						);
 
-						if (responceCreateChat.ok) {
-						}
+						// if (responceCreateChat.ok) {
+						// }
 					}
 
 					setTimeout(() => {
