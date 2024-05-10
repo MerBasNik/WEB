@@ -13,6 +13,8 @@ RUN go mod download
 # Build the Go app
 RUN go build -o main .
 
+FROM alpine:latest
+
 # Expose port 8000 for incoming traffic
 EXPOSE 8000
 
