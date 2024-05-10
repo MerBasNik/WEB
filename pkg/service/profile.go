@@ -41,7 +41,7 @@ func (s *ProfileService) InitAllHobbies() error {
 	return s.repo.InitAllHobbies()
 }
 
-func (s *ProfileService) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
+func (s *ProfileService) CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
 	return s.repo.CreateHobby(profId, hobbies)
 }
 

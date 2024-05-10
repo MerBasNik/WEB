@@ -132,7 +132,7 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 // 	return tx.Commit()
 // }
 
-func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.UserHobbyInput) ([]int, error) {
+func (r *ProfilePostgres) CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
 	var list_id []int
 	var id int
 
@@ -143,8 +143,8 @@ func (r *ProfilePostgres) CreateHobby(profId int, hobbies map[string][]chat.User
 
 	createListQuery := fmt.Sprintf("SELECT tl.id FROM %s tl WHERE tl.description=$1", userHobbyTable)
 	list_hobbies := make([]string, 0, len(hobbies))
- 	for _, value := range hobbies {
-		list_hobbies = append(list_hobbies, value[0].Description)
+ 	for i := 0; i < len(hobbies); i++ {
+		list_hobbies = append(list_hobbies, hobbies[i].Description)
 
   	}
 	var lengthOfHobbies = len(list_hobbies)

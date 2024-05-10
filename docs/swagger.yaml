@@ -434,11 +434,9 @@ paths:
         name: input
         required: true
         schema:
-          additionalProperties:
-            items:
-              $ref: '#/definitions/chat.UserHobbyInput'
-            type: array
-          type: object
+          items:
+            $ref: '#/definitions/chat.UserHobbyInput'
+          type: array
       produces:
       - application/json
       responses:
