@@ -1,15 +1,15 @@
 # Use an official Golang runtime as a parent image
-FROM golang:latest
+FROM golang:latest AS builder
 
 # Set the working directory to /app
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY . ./
 
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o main
 
-COPY --from=0 /app/main ./
+COPY --from=builder /app/main ./
 
 # Download and install any required dependencies
 RUN go mod download
