@@ -2,14 +2,14 @@
 FROM golang:latest AS builder
 
 # Set the working directory to /app
-WORKDIR /app
+WORKDIR /cmd
 
 # Copy the current directory contents into the container at /app
 COPY . ./
 
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo -o main
 
-COPY --from=builder /app/main ./
+COPY --from=builder /cmd/main ./
 
 # Download and install any required dependencies
 RUN go mod download
@@ -20,4 +20,4 @@ FROM alpine:latest
 EXPOSE 8000
 
 # Define the command to run the app when the container starts
-CMD ["./main", "--port", "8000"]
+CMD ["./cmd/main.go", "--port", "8000"]
