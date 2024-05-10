@@ -13,7 +13,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//const maxAvatarSize = 10 * 1024 * 1024 // 10 MB
 
 // @Summary Create Profile
 // @Security ApiKeyAuth

@@ -284,6 +284,13 @@
                 "operationId": "rename-chat",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Chat Id",
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Chat Name",
                         "name": "input",
                         "in": "body",
@@ -291,13 +298,6 @@
                         "schema": {
                             "$ref": "#/definitions/chat.UpdateChat"
                         }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Chat Id",
-                        "name": "chat_id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1174,6 +1174,9 @@
                 "country": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -1224,6 +1227,9 @@
                     "type": "string"
                 },
                 "country": {
+                    "type": "string"
+                },
+                "email": {
                     "type": "string"
                 },
                 "name": {

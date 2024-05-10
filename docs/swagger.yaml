@@ -41,6 +41,8 @@ definitions:
         type: string
       country:
         type: string
+      email:
+        type: string
       id:
         type: integer
       name:
@@ -79,6 +81,8 @@ definitions:
       city:
         type: string
       country:
+        type: string
+      email:
         type: string
       name:
         type: string
@@ -383,17 +387,17 @@ paths:
       description: rename chat
       operationId: rename-chat
       parameters:
+      - description: Chat Id
+        in: path
+        name: chat_id
+        required: true
+        type: integer
       - description: Chat Name
         in: body
         name: input
         required: true
         schema:
           $ref: '#/definitions/chat.UpdateChat'
-      - description: Chat Id
-        in: path
-        name: chat_id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:

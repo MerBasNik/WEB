@@ -290,6 +290,13 @@ const docTemplate = `{
                 "operationId": "rename-chat",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Chat Id",
+                        "name": "chat_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "Chat Name",
                         "name": "input",
                         "in": "body",
@@ -297,13 +304,6 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/chat.UpdateChat"
                         }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Chat Id",
-                        "name": "chat_id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -1180,6 +1180,9 @@ const docTemplate = `{
                 "country": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -1230,6 +1233,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "country": {
+                    "type": "string"
+                },
+                "email": {
                     "type": "string"
                 },
                 "name": {

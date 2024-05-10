@@ -11,6 +11,7 @@ CREATE TABLE users_profile
     id                  serial       PRIMARY KEY,
     name                varchar(255) not null,
     surname             varchar(255) not null,
+    email	            varchar(255) not null unique,
     photo               varchar(255) not null,
     country             varchar(255),
     city	            varchar(255),

@@ -23,9 +23,16 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 		return 0, err
 	}
 
+	var email int
+	query := fmt.Sprintf("SELECT tl.email FROM %s tl WHERE tl.id=$1", usersTable)
+	if err := r.db.Get(&email, query, userId); err != nil {
+		tx.Rollback()
+		return 0, err
+	}
+
 	var id int
-	query := fmt.Sprintf("INSERT INTO %s (name, surname, photo, telegram, country, city, birthday) values ($1, $2, $3, $4, $5, $6, $7) RETURNING id", usersProfileTable)
-	row := r.db.QueryRow(query, profile.Name, profile.Surname, profile.Photo, profile.Telegram, profile.Country, profile.City, profile.Birthday)
+	query = fmt.Sprintf("INSERT INTO %s (name, surname, email, photo, telegram, country, city, birthday) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", usersProfileTable)
+	row := r.db.QueryRow(query, profile.Name, profile.Surname, email, profile.Photo, profile.Telegram, profile.Country, profile.City, profile.Birthday)
 	if err := row.Scan(&id); err != nil {
 		tx.Rollback()
 		return 0, err
@@ -44,7 +51,7 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 func (r *ProfilePostgres) GetProfile(userId, profileId int) (chat.Profile, error) {
 	var profile chat.Profile
 
-	query := fmt.Sprintf(`SELECT tl.id, tl.name, tl.surname, tl.photo, tl.telegram, tl.country, tl.city, tl.birthday FROM %s tl INNER JOIN %s ul on tl.id = ul.profile_id WHERE ul.user_id = $1 AND ul.profile_id = $2`,
+	query := fmt.Sprintf(`SELECT tl.id, tl.name, tl.surname, tl.email, tl.photo, tl.telegram, tl.country, tl.city, tl.birthday FROM %s tl INNER JOIN %s ul on tl.id = ul.profile_id WHERE ul.user_id = $1 AND ul.profile_id = $2`,
 		usersProfileTable, usersProfileListsTable)
 	err := r.db.Get(&profile, query, userId, profileId)
 
@@ -66,6 +73,16 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 		setValues = append(setValues, fmt.Sprintf("surname=$%d", argId))
 		args = append(args, *input.Surname)
 		argId++
+	}
+
+	if input.Email != nil {
+		setValues = append(setValues, fmt.Sprintf("email=$%d", argId))
+		args = append(args, *input.Email)
+		argId++
+		query := fmt.Sprintf("UPDATE %s tl SET email=$1 WHERE tl.id=$2", usersTable)
+		if _, err := r.db.Exec(query, input.Email, userId); err != nil {
+			return err
+		}
 	}
 
 	if input.Photo != nil {
