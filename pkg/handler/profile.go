@@ -103,11 +103,12 @@ type getUserProfile struct {
 // @ID get-profile
 // @Accept  json
 // @Produce  json
+// @Param   prof_id path int true "Prof Id"
 // @Success 200 {integer} getUserProfile
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/profile/get_profile [get]
+// @Router /api/profile/get_profile/{prof_id} [get]
 func (h *Handler) getProfile(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -115,7 +116,7 @@ func (h *Handler) getProfile(c *gin.Context) {
 		return
 	}
 
-	prof_id, err := h.services.Profile.GetProfileId(userId)
+	prof_id, err := strconv.Atoi(c.Param("prof_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return
@@ -131,6 +132,39 @@ func (h *Handler) getProfile(c *gin.Context) {
 		Data: profile,
 	})
 }
+
+
+// @Summary Get ProfileId
+// @Security ApiKeyAuth
+// @Tags profile
+// @Description get profileid
+// @ID get-profileid
+// @Accept  json
+// @Produce  json
+// @Param   prof_id path int true "Prof Id"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} errorResponse
+// @Failure 500 {object} errorResponse
+// @Failure default {object} errorResponse
+// @Router /api/profile/get_profileid [get]
+func (h *Handler) getProfileId(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	prof_id, err := h.services.Profile.GetProfileId(userId)
+	if err != nil {
+		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
+		return
+	}
+
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"profile_id": prof_id,
+	})
+}
+
 
 // @Summary      Upload Avatar
 // @Security 	 ApiKeyAuth
@@ -203,11 +237,11 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 	})
 }
 
-// @Summary Create hobby
+// @Summary Add hobby
 // @Security ApiKeyAuth
 // @Tags hobby
-// @Description create hobby
-// @ID create-hobby
+// @Description add hobby
+// @ID add-hobby
 // @Accept  json
 // @Produce  json
 // @Param   prof_id path int true "Prof Id"
@@ -216,8 +250,8 @@ func (h *Handler) uploadAvatar(c *gin.Context) {
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/profile/{prof_id}/hobby/create_hobby [post]
-func (h *Handler) createHobby(c *gin.Context) {
+// @Router /api/profile/{prof_id}/hobby/add_hobby [post]
+func (h *Handler) addHobby(c *gin.Context) {
 	profId, err := strconv.Atoi(c.Param("prof_id"))
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
@@ -230,7 +264,7 @@ func (h *Handler) createHobby(c *gin.Context) {
 		return
 	}
 
-	hobby_id, err := h.services.Profile.CreateHobby(profId, input)
+	hobby_id, err := h.services.Profile.AddHobby(profId, input)
 	if err != nil {
 		NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return

@@ -141,7 +141,7 @@ func (r *ProfilePostgres) EditProfile(userId, profileId int, input chat.UpdatePr
 // 	return tx.Commit()
 // }
 
-func (r *ProfilePostgres) CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
+func (r *ProfilePostgres) AddHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error) {
 	var list_id []int
 	var id int
 
