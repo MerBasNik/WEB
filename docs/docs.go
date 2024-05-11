@@ -546,7 +546,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/profile/get_profile/{prof_id}": {
+        "/api/profile/get_profile": {
             "get": {
                 "security": [
                     {
@@ -565,15 +565,6 @@ const docTemplate = `{
                 ],
                 "summary": "Get Profile",
                 "operationId": "get-profile",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Prof Id",
-                        "name": "prof_id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",

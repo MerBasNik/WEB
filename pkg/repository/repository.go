@@ -18,7 +18,7 @@ type Profile interface {
 	CreateProfile(userId int, profile chat.Profile) (int, error)
 	GetProfile(userId, profileId int) (chat.Profile, error)
 	EditProfile(userId, profileId int, input chat.UpdateProfile) error
-
+	GetProfileId(userId int) (int, error) 
 	CreateHobby(profId int, hobbies []chat.UserHobbyInput) ([]int, error)
 	GetAllHobby(profId int) ([]chat.UserHobby, error)
 	DeleteHobby(profId, hobbyId int) error

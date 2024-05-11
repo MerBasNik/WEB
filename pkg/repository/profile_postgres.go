@@ -48,6 +48,15 @@ func (r *ProfilePostgres) CreateProfile(userId int, profile chat.Profile) (int, 
 	return id, tx.Commit()
 }
 
+func (r *ProfilePostgres) GetProfileId(userId int) (int, error)  {
+	var prof_id int
+
+	query := fmt.Sprintf(`SELECT tl.profile_id FROM %s tl WHERE tl.user_id=$1`, usersProfileListsTable)
+	err := r.db.Get(&prof_id, query, userId)
+
+	return prof_id, err
+}
+
 func (r *ProfilePostgres) GetProfile(userId, profileId int) (chat.Profile, error) {
 	var profile chat.Profile
 

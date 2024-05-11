@@ -637,18 +637,12 @@ paths:
       summary: Edit Profile
       tags:
       - profile
-  /api/profile/get_profile/{prof_id}:
+  /api/profile/get_profile:
     get:
       consumes:
       - application/json
       description: get profile
       operationId: get-profile
-      parameters:
-      - description: Prof Id
-        in: path
-        name: prof_id
-        required: true
-        type: integer
       produces:
       - application/json
       responses:

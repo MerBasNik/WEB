@@ -103,12 +103,11 @@ type getUserProfile struct {
 // @ID get-profile
 // @Accept  json
 // @Produce  json
-// @Param   prof_id path int true "Prof Id"
 // @Success 200 {integer} getUserProfile
 // @Failure 400,404 {object} errorResponse
 // @Failure 500 {object} errorResponse
 // @Failure default {object} errorResponse
-// @Router /api/profile/get_profile/{prof_id} [get]
+// @Router /api/profile/get_profile [get]
 func (h *Handler) getProfile(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -116,7 +115,7 @@ func (h *Handler) getProfile(c *gin.Context) {
 		return
 	}
 
-	prof_id, err := strconv.Atoi(c.Param("prof_id"))
+	prof_id, err := h.services.Profile.GetProfileId(userId)
 	if err != nil {
 		NewErrorResponse(c, http.StatusBadRequest, "invalid id param")
 		return

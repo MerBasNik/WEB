@@ -52,3 +52,7 @@ func (s *ProfileService) GetAllHobby(profId int) ([]chat.UserHobby, error) {
 func (s *ProfileService) DeleteHobby(profId, hobbyId int) error {
 	return s.repo.DeleteHobby(profId, hobbyId)
 }
+
+func (s *ProfileService) GetProfileId(userId int) (int, error) {
+	return s.repo.GetProfileId(userId)
+} 

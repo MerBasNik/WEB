@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -223,14 +222,10 @@ func (h *Handler) getInfoForListById(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("000000 ", users_avatar)
-
 	users_info := make(map[int]string, len(users_id))
 	for i := 0; i < len(users_id); i++ {
 		users_info[users_id[i]] = users_avatar[i]
 	}
-
-	fmt.Println("111111 ", users_info)
 
 	var lists []chat.UserHobby
 	if (len(users_id) == 2) {
